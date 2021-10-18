@@ -1,6 +1,6 @@
 import os
 
-from datetime import date
+from datetime import date, datetime
 
 import json
 import requests
@@ -43,6 +43,20 @@ def index():
         r.raise_for_status()
         data = r.json()
     return render_template("index.html", data=data, max_rain=MAX_RAIN_ACCEPTABLE, max_wind=MAX_WIND_ACCEPTABLE)
+
+
+@app.template_filter("valid_day")
+def valid_day(value):
+    """Only return valid day objects"""
+    now = datetime.now()
+    if value:
+        for item in value:
+            d = date.fromisoformat(item["date"])
+            if now.day != d.day:
+                yield item
+            else:
+                if now.hour < MAX_HOUR:
+                    yield item
 
 
 @app.template_filter("valid_hour")
