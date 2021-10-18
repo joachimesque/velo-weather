@@ -32,7 +32,7 @@ MAX_RAIN_ACCEPTABLE = 1.5
 @app.route("/")
 def index():
     data = None
-    q = request.args.get("location", "Poissy, France")
+    q = request.args.get("location", "Montreuil, France")
     api_key = os.getenv("WEATHER_API_KEY")
     r = requests.get(f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=no&alerts=yes")
     # probably location unknow
