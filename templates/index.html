@@ -59,12 +59,16 @@
             justify-content: center;
             padding: 0 .6rem;
             background-color: hsla(0, 0%, 100%, 0);
-            transition: background-color .2s ease;
+            transition: background-color .2s ease, opacity .2s ease;
             margin: .2em 0;
+        }
+        td .value.invisible_value {
+            opacity: 0;
         }
         table:focus td .value,
         table:hover td .value {
             background-color: hsla(0, 0%, 100%, .8);
+            opacity: 1;
         }
         td.cell_precipitation {
             position: relative;
@@ -274,8 +278,10 @@
                     <tr>
                         <th title="{{ _("Very complicated opportunity indicator") }}">🎲</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour|proba }};">
-                            <span class="value"></span>
+                        <td style="background-color: {{ hour|proba_value|proba_gradient }};">
+                            <span class="invisible_value value">
+                                {{ hour|proba_value }}{{_("&percnt;")}}
+                            </span>
                         </td>
                         {% endfor %}
                     </tr>
@@ -290,7 +296,7 @@
                     <tr>
                         <th title="{{ _("Wind direction") }}">🧭</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td title="{{ hour.wind_dir }}">
+                        <td>
                             <span class="value">
                                 <span aria-hidden class="degree" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
                                 <small>

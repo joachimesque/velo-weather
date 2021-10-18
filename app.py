@@ -125,9 +125,9 @@ def day(value, format="%A %d %b"):
     return format_date(date=d, format=localized_format)
 
 
-@app.template_filter("proba")
-def proba(hour):
-    """Compute a proba and output gradient color"""
+@app.template_filter("proba_value")
+def proba_value(hour):
+    """Compute a probability and output percentage"""
     chance = int(hour["chance_of_rain"]) / 100
     precip = min(hour["precip_mm"], MAX_RAIN_ACCEPTABLE)
     wind = min(hour["wind_kph"], MAX_WIND_ACCEPTABLE)
@@ -137,7 +137,13 @@ def proba(hour):
     # wind is twice as annoying as rain
     p = (p_precip + p_wind * 2) / 3
 
-    return gradient((1 - p) * 100, max=100, end="green")
+    return round((1 - p) * 100)
+
+
+@app.template_filter("proba_gradient")
+def proba_gradient(probability):
+    """Output gradient color"""
+    return gradient(probability, max=100, end="green")
 
 
 @app.template_filter("localized_condition")
