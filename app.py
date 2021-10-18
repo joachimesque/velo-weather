@@ -76,7 +76,7 @@ def gradient(value, max, end="red"):
     c1 = Color(hsl=(0, 1, 1))
     c2 = Color(end)
     gradient = list(c1.range_to(c2, max + 1))
-    value = value if value < max else value
+    value = value if value < max else max
     return gradient[int(value)].hex
 
 
