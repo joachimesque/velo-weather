@@ -75,7 +75,7 @@ def precip_percent(precip_mm):
 
 
 @app.template_filter("gradient_temp")
-def gradient_temp(temp, ideal):
+def gradient_temp(temp, ideal_min, ideal_max):
     """Handle gradient for temp around ideal temp"""
     _max = 35
     temp = temp if temp > 0 else 0
@@ -83,12 +83,15 @@ def gradient_temp(temp, ideal):
 
     gradient = []
 
-    for temperature in range(ideal):
-        temp_luminance = 50 + (50 / ideal) * temperature
+    for temperature in range(ideal_min):
+        temp_luminance = 50 + (50 / ideal_min - 1) * temperature
         gradient.append("hsl(220,100%,{}%)".format(round(temp_luminance)))
 
-    for temperature in range(_max - ideal + 1):
-        temp_luminance = 100 - (50 / (_max - ideal + 1)) * temperature
+    for temperature in range(ideal_max - ideal_min):
+        gradient.append("hsl(220,100%,100%)")
+
+    for temperature in range(_max - ideal_max + 1):
+        temp_luminance = 100 - (50 / (_max - ideal_max + 1)) * temperature
         gradient.append("hsl(0,100%,{}%)".format(round(temp_luminance)))
 
     gradient.append("hsl(0,100%,50%)")

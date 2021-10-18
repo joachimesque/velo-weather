@@ -244,13 +244,13 @@
                     <tr>
                         <th title="{{ _("Temperature") }}">🌡</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.temp_c|gradient_temp(19) }};"><span class="value">{{ hour.temp_c }}{{_("°C")}}</span></td>
+                        <td style="background-color: {{ hour.temp_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.temp_c }}{{_("°C")}}</span></td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th title="{{ _("Feels like") }}">🥶</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.feelslike_c|gradient_temp(19) }};"><span class="value">{{ hour.feelslike_c }}{{_("°C")}}</span></td>
+                        <td style="background-color: {{ hour.feelslike_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.feelslike_c }}{{_("°C")}}</span></td>
                         {% endfor %}
                     </tr>
                 </tbody>
