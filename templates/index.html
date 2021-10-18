@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://unpkg.com/chota@latest">
     <title>🚴💨 velo.france.sh</title>
     <style>
-        table {
-            font-size: 0.8em;
-        }
         h2 > img {
             max-width: 30px;
             margin-bottom: -5px;
@@ -36,10 +34,7 @@
             width: auto;
         }
         form {
-            margin: 1em 0 .7em;
-        }
-        div.form {
-            text-align: right;
+            margin: 0 0 2em;
         }
         details > ul {
             list-style-type: none;
@@ -48,7 +43,7 @@
             margin-top: 2em;
         }
         small {
-            font-size: .8em;
+            font-size: 0.8em;
         }
         td .value {
             display: inline-flex;
@@ -78,6 +73,41 @@
             height: var(--bg-height, 0%);
             background-color: var(--bg-color);
             z-index: -1;
+        }
+
+        .table-container {
+            overflow-x: scroll;
+            overscroll-behavior: contain;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 100%;
+            font-size: 1.6rem;
+            font-family: sans-serif;
+        }
+        tr > :first-child {
+            background-color: white;
+            position: sticky;
+            left: 0;
+            box-sizing: border-box;
+            min-width: 50px;
+            z-index: 1;
+        }
+
+
+        /* Portrait tablet and bigger */
+        @media(min-width: 768px) {
+            table {
+                font-size: 1.5rem;
+            }
+            form {
+                margin: 1em 0 .7em;
+            }
+            div.form {
+                text-align: right;
+            }
         }
     </style>
 </head>
@@ -155,6 +185,7 @@
         {% for forecast in forecasts %}
         <section>
             <h2><img src="{{ forecast.day.condition.icon }}" alt="{{ forecast.day.condition.code|localized_condition }}"> {{ forecast.date|day }}</h2>
+            <div class="table-container">
             <table tabindex="-1">
                 <thead>
                     <tr>
@@ -224,6 +255,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </section>
         {% endfor %}
         {% endif %}
