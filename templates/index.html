@@ -52,6 +52,7 @@
         }
         td .value {
             display: inline-flex;
+            flex-direction: column;
             min-height: 2.6rem;
             min-width: 2.6rem;
             border-radius: 1.3rem;
@@ -192,7 +193,6 @@
                         <td title="{{ hour.wind_dir }}">
                             <span class="value">
                                 <span aria-hidden class="degree" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
-                                <br>
                                 <small>
                                     <abbr title="{{ hour.wind_dir|localized_azimuth|last }}">
                                         {{ hour.wind_dir|localized_azimuth|first }}
