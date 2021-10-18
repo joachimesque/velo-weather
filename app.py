@@ -106,9 +106,9 @@ def gradient_temp(temp, ideal_min, ideal_max):
 
     for temperature in range(_max - ideal_max + 1):
         temp_luminance = 100 - (50 / (_max - ideal_max + 1)) * temperature
-        gradient.append("hsl(0,100%,{}%)".format(round(temp_luminance)))
+        gradient.append("hsl(22,100%,{}%)".format(round(temp_luminance)))
 
-    gradient.append("hsl(0,100%,50%)")
+    gradient.append("hsl(22,100%,50%)")
 
     return gradient[round(temp)]
 
