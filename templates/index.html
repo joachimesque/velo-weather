@@ -190,7 +190,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <th>{{ hour.time.split(' ')[-1].split(':')[0] }}</th>
                         {% endfor %}
                     </tr>
@@ -198,13 +198,13 @@
                 <tbody>
                     <tr>
                         <th title="Forecast icon"></th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td><img style="max-width: 25px;" src="{{ hour.condition.icon }}" alt="{{ hour.condition.code|localized_condition }}"></td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th title="{{ _("Very complicated opportunity indicator") }}">🎲</th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td style="background-color: {{ hour|proba }};">
                             <span class="value"></span>
                         </td>
@@ -212,7 +212,7 @@
                     </tr>
                     <tr>
                         <th title="{{ _("Wind speed (kph)") }}">💨</th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td style="background-color: {{ hour.wind_kph|gradient(max_wind) }};">
                             <span class="value">{{ hour.wind_kph }}</span>
                         </td>
@@ -220,7 +220,7 @@
                     </tr>
                     <tr>
                         <th title="{{ _("Wind direction") }}">🧭</th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td title="{{ hour.wind_dir }}">
                             <span class="value">
                                 <span aria-hidden class="degree" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
@@ -235,7 +235,7 @@
                     </tr>
                     <tr>
                         <th title="{{ _("Chance of rain") }}">☔️</th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td class="cell_precipitation" style="--bg-color: hsl(210, 80%, {{ 100 - hour.chance_of_rain / 2 }}%); --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="Chance of rain is {{ hour.chance_of_rain }}%, and precipitation is {{ hour.precip_mm }} millimeters.">
                             <span class="value">{{ hour.chance_of_rain }}{{_("&percnt;")}}</span>
                         </td>
@@ -243,13 +243,13 @@
                     </tr>
                     <tr>
                         <th title="{{ _("Temperature") }}">🌡</th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td style="background-color: {{ hour.temp_c|gradient_temp(19) }};"><span class="value">{{ hour.temp_c }}{{_("°C")}}</span></td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th title="{{ _("Feels like") }}">🥶</th>
-                        {% for hour in forecast.hour|selectattr("is_day") %}
+                        {% for hour in forecast.hour|valid_hour %}
                         <td style="background-color: {{ hour.feelslike_c|gradient_temp(19) }};"><span class="value">{{ hour.feelslike_c }}{{_("°C")}}</span></td>
                         {% endfor %}
                     </tr>

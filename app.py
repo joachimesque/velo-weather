@@ -28,6 +28,9 @@ MAX_WIND_ACCEPTABLE = 35
 # top of the scale for rain, mm per hour
 MAX_RAIN_ACCEPTABLE = 1.5
 
+MIN_HOUR = 7
+MAX_HOUR = 20
+
 
 @app.route("/")
 def index():
@@ -40,6 +43,16 @@ def index():
         r.raise_for_status()
         data = r.json()
     return render_template("index.html", data=data, max_rain=MAX_RAIN_ACCEPTABLE, max_wind=MAX_WIND_ACCEPTABLE)
+
+
+@app.template_filter("valid_hour")
+def valid_hour(value):
+    """Only return valid hour objects"""
+    if value:
+        for item in value:
+            hour = int(item["time"].split(' ')[-1].split(':')[0])
+            if hour <= MAX_HOUR and hour >= MIN_HOUR:
+                yield item
 
 
 @app.template_filter("gradient")
