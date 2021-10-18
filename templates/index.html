@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://unpkg.com/chota@latest">
-    <title>🚴💨 velo.france.sh</title>
+    <title>🚴💨 Velo Weather</title>
     <style>
         h2 > img {
             max-width: 30px;
@@ -117,7 +117,7 @@
         <header>
             <div class="row">
                 <div class="col">
-                    <h1>🚴💨 velo.france.sh</h1>
+                    <h1>🚴💨 Velo Weather</h1>
                 </div>
                 <div class="col form">
                     <form method="GET" action="/" id="location-form">
@@ -236,7 +236,7 @@
                     <tr>
                         <th title="{{ _("Chance of rain") }}">☔️</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td class="cell_precipitation" style="--bg-color: hsl(210, 80%, {{ 100 - hour.chance_of_rain / 2 }}%); --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="Chance of rain is {{ hour.chance_of_rain }}%, and precipitation is {{ hour.precip_mm }} millimeters.">
+                        <td class="cell_precipitation" style="--bg-color: hsl(210, 80%, {{ 100 - hour.chance_of_rain / 2 }}%); --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _("Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.", chance_of_rain=hour.chance_of_rain, percent=_("&percnt;"), precip_mm=hour.precip_mm ) }}">
                             <span class="value">{{ hour.chance_of_rain }}{{_("&percnt;")}}</span>
                         </td>
                         {% endfor %}
