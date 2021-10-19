@@ -10,6 +10,9 @@
     {% endif %}
     <title>🚴💨 Velo Weather</title>
     <style>
+        :root {
+            --grid-gutter: 5rem;
+        }
         h2 > img {
             max-width: 1.6em;
             vertical-align: middle;
@@ -17,12 +20,9 @@
         td, th {
             vertical-align: middle;
             text-align: center;
-            padding: 0.4rem .4rem;
+            padding: 0.4rem 0.4rem;
         }
-        table > tbody > tr > th {
-            font-size: 1.2em;
-        }
-        .degree {
+        .is-inline-block {
             display: inline-block;
         }
         summary {
@@ -43,14 +43,34 @@
         form {
             margin: 0 0 2em;
         }
-        details > ul {
-            list-style-type: none;
-        }
         section {
-            margin-top: 2em;
+            margin: 2em 0 3rem;
         }
         small {
             font-size: 0.8em;
+        }
+
+        /* TABLES */
+        .table-container {
+            overflow-x: scroll;
+            overscroll-behavior: contain;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 100%;
+            font-size: 1.6rem;
+            font-family: sans-serif;
+        }
+
+        tr > :first-child {
+            background-color: white;
+            position: sticky;
+            left: 0;
+            box-sizing: border-box;
+            min-width: 50px;
+            z-index: 1;
         }
         td .value {
             display: inline-flex;
@@ -87,32 +107,11 @@
             z-index: -1;
         }
 
-        .table-container {
-            overflow-x: scroll;
-            overscroll-behavior: contain;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 100%;
-            font-size: 1.6rem;
-            font-family: sans-serif;
-        }
-        tr > :first-child {
-            background-color: white;
-            position: sticky;
-            left: 0;
-            box-sizing: border-box;
-            min-width: 50px;
-            z-index: 1;
-        }
-
+        /* CURRENT WEATHER */
         .current_weather {
             margin: 0 auto;
             max-width: 64rem;
         }
-
         .current_weather_title,
         dl.current_weather_summary div {
             position: relative;
@@ -138,13 +137,11 @@
             background: white;
             z-index: 1;
         }
-
         .current_weather_title span,
         dl.current_weather_summary dt {
             text-align: left;
             padding-right: 0.6em;
         }
-
         .current_weather_title span.current_weather_icon,
         dl.current_weather_summary dd {
             text-align: right;
@@ -221,7 +218,7 @@
                 <div>
                     <dt>{{ _("Wind direction") }}</dt>
                     <dd>
-                        <span aria-hidden class="degree" style="transform: rotate({{ data.current.wind_degree }}deg);">↓</span>
+                        <span aria-hidden class="is-inline-block" style="transform: rotate({{ data.current.wind_degree }}deg);">↓</span>
                         <small>
                             <abbr title="{{ data.current.wind_dir|localized_azimuth|last }}">
                                 {{ data.current.wind_dir|localized_azimuth|first }}
@@ -303,7 +300,7 @@
                         {% for hour in forecast.hour|valid_hour %}
                         <td>
                             <span class="value">
-                                <span aria-hidden class="degree" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
+                                <span aria-hidden class="is-inline-block" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
                                 <small>
                                     <abbr title="{{ hour.wind_dir|localized_azimuth|last }}">
                                         {{ hour.wind_dir|localized_azimuth|first }}
