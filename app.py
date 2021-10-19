@@ -42,7 +42,16 @@ MAX_HOUR = 20
 @app.route("/")
 def index():
     data = None
-    q = request.args.get("location", "Montreuil, France")
+    q = request.args.get("location", None)
+
+    if q:
+        session['location'] = q
+    else:
+        if session.get("location", None):
+            q = session.get("location")
+        else:
+            q = "Montreuil, France"
+
     api_key = os.getenv("WEATHER_API_KEY")
     r = requests.get(f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=no&alerts=yes")
     # probably location unknow
