@@ -90,7 +90,7 @@
         }
         table:focus td .value,
         table:hover td .value {
-            background-color: hsla(0, 0%, 100%, .8);
+            background-color: hsl(0, 0%, 100%);
             opacity: 1;
         }
         td.cell_precipitation {
@@ -314,7 +314,7 @@
                         <th title="{{ _("Chance of rain") }}">☔️</th>
                         {% for hour in forecast.hour|valid_hour %}
                         <td class="cell_precipitation" style="--bg-color: hsl(210, 80%, {{ 100 - hour.chance_of_rain / 2 }}%); --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _("Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.", chance_of_rain=hour.chance_of_rain, percent=_("&percnt;"), precip_mm=hour.precip_mm ) }}">
-                            <span class="value">{{ hour.chance_of_rain }}{{_("&percnt;")}}</span>
+                            <span class="value">{{ hour.precip_mm }}{{_("mm")}}</span>
                         </td>
                         {% endfor %}
                     </tr>
@@ -336,8 +336,28 @@
         </section>
         {% endfor %}
         {% endif %}
-        <footer>
-            <a href="https://github.com/abulte/velo-weather">{{ _("Source code") }}</a> | <a href="https://www.buymeacoffee.com/abulte">{{ _("Buy me a pizza") }} 🍕</a>
+        <footer class="row">
+            <div class="col">
+                <a href="https://github.com/abulte/velo-weather">{{ _("Source code") }}</a> | <a href="https://www.buymeacoffee.com/abulte">{{ _("Buy me a pizza") }} 🍕</a>
+            </div>
+
+            <div class="col form">
+                <form method="GET" action="/" id="languages-form">
+                    <div class="grouped">
+                        <select name="lang" aria-label="{{ _("Language") }}">
+                            {% for lang, lang_name in languages.items() %}
+                                <option value="{{ lang }}" {% if get_locale() == lang %}selected{% endif %}>
+                                    {{ lang_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="button secondary">
+                            {{ _("Go !") }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
         </footer>
         <script>
             function submitForm() {

@@ -6,20 +6,27 @@ import json
 import requests
 from colour import Color
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from flask_babel import Babel, format_date, _
 
 
 app = Flask(__name__)
 
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
-app.config['LANGUAGES'] = ['en', 'fr']
+app.config['LANGUAGES'] = {'en': 'English', 'fr': 'Français'}
+
+app.secret_key = os.getenv('SECRET_KEY')
 
 babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    if request.args.get('lang'):
+        session['lang'] = request.args.get('lang')
+    else:
+        if not 'lang' in session:
+            session['lang'] = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+    return session.get('lang', 'en')
 
 app.jinja_env.globals['get_locale'] = get_locale
 
@@ -42,7 +49,11 @@ def index():
     if r.status_code != 400:
         r.raise_for_status()
         data = r.json()
-    return render_template("index.html", data=data, max_rain=MAX_RAIN_ACCEPTABLE, max_wind=MAX_WIND_ACCEPTABLE)
+    return render_template("index.html",
+                            data=data,
+                            max_rain=MAX_RAIN_ACCEPTABLE,
+                            max_wind=MAX_WIND_ACCEPTABLE,
+                            languages=app.config['LANGUAGES'])
 
 
 @app.template_filter("valid_day")
