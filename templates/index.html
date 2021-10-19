@@ -182,9 +182,11 @@
                 </div>
                 <div class="col form">
                     <form method="GET" action="/" id="location-form">
-                        <input list="locations" type="text" name="location" id="location" autocomplete="off" value="{{ location }}" aria-label="{{ _("Location") }}">
-                        <datalist id="locations"></datalist>
-                        <button type="submit">{{ _("Go !") }}</button>
+                        <div class="grouped">
+                            <input list="locations-list" type="text" name="location" id="location-input" autocomplete="off" value="{{ location }}" aria-label="{{ _("Location") }}">
+                            <datalist id="locations-list"></datalist>
+                            <button type="submit">{{ _("Go !") }}</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -363,8 +365,8 @@
             function submitForm() {
                 document.getElementById("location-form").submit()
             }
-            var locEl = document.getElementById("location")
-            var locListeEl = document.getElementById("locations")
+            var locEl = document.getElementById("location-input")
+            var locListeEl = document.getElementById("locations-list")
             locEl.onfocus = function (e) {
                 e.target.value = ""
             }
@@ -374,12 +376,12 @@
             }
             locEl.oninput = function (e) {
                 if (!window.fetch) return
-                window.fetch("https://geo.api.gouv.fr/communes?nom=" + e.target.value + "&fields=departement&boost=population&limit=5")
+                window.fetch("https://geo.api.gouv.fr/communes?nom=" + e.target.value + "&boost=population&limit=5")
                 .then(function (r) { return r.json() })
                 .then(function(data) {
                     if (!data.length) return
                     locListeEl.innerHTML = data.map(l => {
-                        return "<option value='" + l.nom +"'>" + l.departement.nom + "</option>"
+                        return "<option value='" + l.nom + "'></option>"
                     })
                 })
             }
