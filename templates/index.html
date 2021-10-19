@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+    {% if data %}
+        <link rel="icon" href="{{ data.current.condition.icon }}">
+    {% endif %}
     <title>🚴💨 Velo Weather</title>
     <style>
         h2 > img {
