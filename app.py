@@ -210,13 +210,14 @@ def proba_value(hour):
     p_precip = (chance * precip) / MAX_RAIN_ACCEPTABLE
     p_wind = wind / MAX_WIND_ACCEPTABLE
     
-    if bool(hour["is_day"]):
-        # wind is twice as annoying as rain
-        p = (p_precip + p_wind * 2) / 3
-    else:
-        # rain is more dangerous by night
-        p = (p_precip + p_wind) / 2
-        # and night has a malus
+    # wind is twice as annoying as rain
+    p = (p_precip + p_wind * 2) / 3
+
+    # by night
+    if not bool(hour["is_day"]):
+        # rain is more dangerous
+        p = p + p_precip / 5
+        # and night has a malus anyway
         p = p * 1.3
 
     return round((1 - p) * 100)
@@ -225,7 +226,7 @@ def proba_value(hour):
 @app.template_filter("proba_gradient")
 def proba_gradient(probability):
     """Output gradient color"""
-    return gradient(probability, max=100, end=(.5,.8,.5))
+    return gradient(probability, max=100, start=(0,.8,.6), end=(.4,.8,.5))
 
 
 @app.template_filter("localized_condition")
