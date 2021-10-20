@@ -1,6 +1,7 @@
 import os
 
 from datetime import date, datetime
+import pytz
 
 import json
 import requests
@@ -68,10 +69,8 @@ def index():
 
 
 @app.template_filter("valid_day")
-def valid_day(value):
-def valid_day(value, timezone):
+def valid_day(value, timezone="Europe/Paris"):
     """Only return valid day objects"""
-    now = datetime.now()
     tz = pytz.timezone(timezone)
     now = datetime.now(tz)
     if value:
