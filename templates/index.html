@@ -218,12 +218,25 @@
                     <dd>{{ data.current.last_updated }}</dd>
                 </div>
                 <div>
+                    <dt>{{ _('Air quality') }}</dt>
+                    <dd>
+                        <span aria-hidden="" style="color: {{ data.current.air_quality|air_quality_gradient }}">●</span>
+                        {{ data.current.air_quality|air_quality_translation }}
+                    </dd>
+                </div>
+                <div>
                     <dt>{{ _('Wind speed') }}</dt>
-                    <dd>{{ data.current.wind_kph }}{{ _('kph') }}</dd>
+                    <dd>
+                        {{ data.current.wind_kph|wind_repeat('💨') }}
+                        {{ data.current.wind_kph }}{{ _('kph') }}
+                    </dd>
                 </div>
                 <div>
                     <dt>{{ _('Wind gust') }}</dt>
-                    <dd>{{ data.current.gust_kph }}{{ _('kph') }}</dd>
+                    <dd>
+                        {{ data.current.gust_kph|wind_repeat('💨') }}
+                        {{ data.current.gust_kph }}{{ _('kph') }}
+                    </dd>
                 </div>
                 <div>
                     <dt>{{ _('Wind direction') }}</dt>

@@ -55,7 +55,7 @@ def index():
             q = "Montreuil, France"
 
     api_key = os.getenv("WEATHER_API_KEY")
-    r = requests.get(f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=no&alerts=yes")
+    r = requests.get(f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=yes&alerts=no")
     # probably location unknow
     if r.status_code != 400:
         r.raise_for_status()
@@ -100,6 +100,53 @@ def gradient(value, max, start=(0, .8, 1), end=(0,.8,.5)):
     gradient = list(c1.range_to(c2, max + 1))
     value = value if value < max else max
     return gradient[int(value)].hex
+
+
+@app.template_filter("air_quality_index")
+def air_quality_index(air_quality):
+    """
+    Returns an index for the air quality based on PM10, NO2, SO2, O3
+    Based on http://www.atmo-alsace.net/site/Explications-sur-le-calcul-des-indices-22.html
+    """
+    scales = {
+        'pm10': [0, 10, 20, 30, 40, 50, 65, 80, 100, 125],
+        'so2': [0, 40, 80, 120, 160, 200, 250, 300, 400, 500],
+        'no2': [0, 30, 55, 85, 110, 135, 165, 200, 275, 400],
+        'o3': [0, 30, 55, 80, 105, 130, 150, 180, 210, 240],
+    }
+
+    aq_indexes = []
+    for scale in scales.keys():
+        scale_index = min([v for v in scales[scale] if v >= air_quality[scale]] or [0])
+        aq_indexes.append(scales[scale].index(scale_index) + 1)
+
+    return max(aq_indexes) if len(aq_indexes) > 0 else 0
+
+
+@app.template_filter("air_quality_translation")
+def air_quality_translation(air_quality):
+    terms = [
+        _('No data'),
+        _('Very good'),
+        _('Very good'),
+        _('Good'),
+        _('Good'),
+        _('Average'),
+        _('Below average'),
+        _('Below average'),
+        _('Bad'),
+        _('Bad'),
+        _('Very bad'),
+    ]
+    index = air_quality_index(air_quality)
+    return terms[index]
+
+
+@app.template_filter("air_quality_gradient")
+def air_quality_gradient(air_quality):
+    index = air_quality_index(air_quality)
+
+    return gradient(index, 10, start=(.5,.8,.5)) if index > 0 else '#fff'
 
 
 @app.template_filter("wind_repeat")
