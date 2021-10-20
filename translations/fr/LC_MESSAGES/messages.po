@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-20 20:55+0200\n"
+"POT-Creation-Date: 2021-10-20 21:16+0200\n"
 "PO-Revision-Date: 2021-09-20 21:34+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -19,9 +19,8 @@ msgstr ""
 "Generated-By: Babel 2.9.1\n"
 
 #: app.py:130
-#, fuzzy
 msgid "No data"
-msgstr "Aucune donnée trouvée"
+msgstr "Aucune donnée"
 
 #: app.py:131 app.py:132
 msgid "Very good"
@@ -197,8 +196,8 @@ msgid "Wind speed (kph)"
 msgstr "Vitesse du vent (km/h)"
 
 #: templates/index.html:363
-msgid "Chance of rain"
-msgstr "Risque de pluie"
+msgid "Precipitation (mm)"
+msgstr "Précipitation (mm)"
 
 #: templates/index.html:365
 #, python-format
@@ -214,12 +213,10 @@ msgid "Temperature"
 msgstr "Température"
 
 #: templates/index.html:390
-#, fuzzy
 msgid "Based on an idea and code by abulte:"
 msgstr "Basé sur une idée et du code par abulte :"
 
 #: templates/index.html:391
-#, fuzzy
 msgid "Support them with a pizza"
 msgstr "Offrez-lui une pizza"
 
