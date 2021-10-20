@@ -313,7 +313,7 @@
                     <tr>
                         <th title="{{ _('Wind speed (kph)') }}">💨</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.wind_kph|gradient(max_wind) }};">
+                        <td>
                             <span class="value">
                                 <span>{{ hour.wind_kph|wind_repeat('💨') }}</span>
                                 <small>{{ hour.wind_kph }}{{ _('kph') }}</small>
