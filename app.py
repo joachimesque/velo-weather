@@ -92,11 +92,11 @@ def valid_hour(value):
 
 
 @app.template_filter("gradient")
-def gradient(value, max, end="red"):
+def gradient(value, max, start=(0, .8, 1), end=(0,.8,.5)):
     """With a value from 0 to max, generate the correct gradient"""
     value = int(value)
-    c1 = Color(hsl=(0, 1, 1))
-    c2 = Color(end)
+    c1 = Color(hsl=start)
+    c2 = Color(hsl=end)
     gradient = list(c1.range_to(c2, max + 1))
     value = value if value < max else max
     return gradient[int(value)].hex
@@ -171,7 +171,7 @@ def proba_value(hour):
 @app.template_filter("proba_gradient")
 def proba_gradient(probability):
     """Output gradient color"""
-    return gradient(probability, max=100, end="green")
+    return gradient(probability, max=100, end=(.5,.8,.5))
 
 
 @app.template_filter("localized_condition")
