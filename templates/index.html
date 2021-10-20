@@ -280,7 +280,7 @@
         </details>
 
         {% set forecasts = data.forecast.forecastday %}
-        {% for forecast in forecasts|valid_day %}
+        {% for forecast in forecasts|valid_day(data.location.tz_id) %}
         <section>
             <h2><img src="{{ forecast.day.condition.icon }}" alt="{{ forecast.day.condition.code|localized_condition }}"> {{ forecast.date|day }}</h2>
             <div class="table-container">

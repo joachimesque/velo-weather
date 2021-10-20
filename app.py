@@ -69,8 +69,11 @@ def index():
 
 @app.template_filter("valid_day")
 def valid_day(value):
+def valid_day(value, timezone):
     """Only return valid day objects"""
     now = datetime.now()
+    tz = pytz.timezone(timezone)
+    now = datetime.now(tz)
     if value:
         for item in value:
             d = date.fromisoformat(item["date"])
