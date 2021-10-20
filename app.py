@@ -5,6 +5,7 @@ from datetime import date, datetime
 import json
 import requests
 from colour import Color
+from itertools import repeat
 
 from flask import Flask, render_template, request, session
 from flask_babel import Babel, format_date, _
@@ -35,6 +36,7 @@ MAX_WIND_ACCEPTABLE = 35
 # top of the scale for rain, mm per hour
 MAX_RAIN_ACCEPTABLE = 1.5
 
+# scale of hours of the day
 MIN_HOUR = 7
 MAX_HOUR = 20
 
@@ -98,6 +100,12 @@ def gradient(value, max, end="red"):
     gradient = list(c1.range_to(c2, max + 1))
     value = value if value < max else max
     return gradient[int(value)].hex
+
+
+@app.template_filter("wind_repeat")
+def wind_repeat(speed_kph, character):
+    """Repeats a character depending on the force of the wind"""
+    return "".join(repeat(character, (round(speed_kph / 10)) if speed_kph < MAX_WIND_ACCEPTABLE else 4))
 
 
 @app.template_filter("precip_percent")

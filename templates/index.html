@@ -191,42 +191,42 @@
                 <div class="col form">
                     <form method="GET" action="/" id="location-form">
                         <div class="grouped">
-                            <input list="locations-list" type="text" name="location" id="location-input" autocomplete="off" value="{{ location }}" aria-label="{{ _("Location") }}">
+                            <input list="locations-list" type="text" name="location" id="location-input" autocomplete="off" value="{{ location }}" aria-label="{{ _('Location') }}">
                             <datalist id="locations-list"></datalist>
-                            <button type="submit">{{ _("Go !") }}</button>
+                            <button type="submit">{{ _('Go !') }}</button>
                         </div>
                     </form>
                 </div>
             </div>
         </header>
         {% if not data %}
-        🤕 {{ _("No data found. Wrong location?") }}
+        🤕 {{ _('No data found. Wrong location?') }}
         {% else %}
         <section class="card current_weather">
             <h2 class="current_weather_title">
-                <span>{{ _("Now") }}</span>
+                <span>{{ _('Now') }}</span>
 
                 <span class="current_weather_icon">
                     <img src="{{ data.current.condition.icon }}" alt="{{ data.current.condition.code|localized_condition }}">
-                    {{ data.current.temp_c }}{{_("°C")}}
+                    {{ data.current.temp_c }}{{_('°C')}}
                 </span>
             </h2>
             
             <dl class="current_weather_summary">
                 <div>
-                    <dt>{{ _("Updated") }}</dt>
+                    <dt>{{ _('Updated') }}</dt>
                     <dd>{{ data.current.last_updated }}</dd>
                 </div>
                 <div>
-                    <dt>{{ _("Wind speed") }}</dt>
-                    <dd>{{ data.current.wind_kph }}{{ _("kph") }}</dd>
+                    <dt>{{ _('Wind speed') }}</dt>
+                    <dd>{{ data.current.wind_kph }}{{ _('kph') }}</dd>
                 </div>
                 <div>
-                    <dt>{{ _("Wind gust") }}</dt>
-                    <dd>{{ data.current.gust_kph }}{{ _("kph") }}</dd>
+                    <dt>{{ _('Wind gust') }}</dt>
+                    <dd>{{ data.current.gust_kph }}{{ _('kph') }}</dd>
                 </div>
                 <div>
-                    <dt>{{ _("Wind direction") }}</dt>
+                    <dt>{{ _('Wind direction') }}</dt>
                     <dd>
                         <span aria-hidden class="is-inline-block" style="transform: rotate({{ data.current.wind_degree }}deg);">↓</span>
                         <small>
@@ -237,32 +237,32 @@
                     </dd>
                 </div>
                 <div>
-                    <dt>{{ _("Precipitation") }}</dt>
-                    <dd>{{ data.current.precip_mm }}{{ _("mm") }}</dd>
+                    <dt>{{ _('Precipitation') }}</dt>
+                    <dd>{{ data.current.precip_mm }}{{ _('mm') }}</dd>
                 </div>
                 <div>
-                    <dt>{{ _("Feels like") }}</dt>
-                    <dd>{{ data.current.feelslike_c }}{{_("°C")}}</dd>
+                    <dt>{{ _('Feels like') }}</dt>
+                    <dd>{{ data.current.feelslike_c }}{{_('°C')}}</dd>
                 </div>
             </dl>
         </section>
 
         <details>
-            <summary>💡 {{ _("Legend") }}</summary>
+            <summary>💡 {{ _('Legend') }}</summary>
             <ul>
                 <li>
-                    🎲 {{ _("A ride opportunity indicator, based on rain and wind.") }}
-                    {{ _("See source code <code>def proba(hour):</code> for details.") }}
-                    {{ _("Linear gradient from 0 (white) to 100 (green).") }}
+                    🎲 {{ _('A ride opportunity indicator, based on rain and wind.') }}
+                    {{ _('See source code <code>def proba(hour):</code> for details.') }}
+                    {{ _('Linear gradient from 0 (white) to 100 (green).') }}
                 </li>
-                <li>💨 {{ _("Wind speed in kilometers per hour, color scale from 0 (white) to %(max_wind)s (red), capped at the max wind speed of %(max_wind)s<abbr title='kilometers per hour'>kph</abbr>.", max_wind=max_wind) }}</li>
-                <li>🧭 {{ _("Wind directions, in degrees.") }}</li>
+                <li>💨 {{ _('Wind speed in kilometers per hour, color scale from 0 (white) to %(max_wind)s (red), capped at the max wind speed of %(max_wind)s<abbr title=\'kilometers per hour\'>kph</abbr>.', max_wind=max_wind) }}</li>
+                <li>🧭 {{ _('Wind directions, in degrees.') }}</li>
                 <li>
-                    🌧 {{ _("Precipitation in millimeters per hour.") }}
-                    {{ _("Color scale from 0 (white) to 100&percnt; (red), based on (rain probability × preciptation) capped at %(max_rain)s<abbr title='millimeters'>mm</abbr>.", max_rain=max_rain) }}</li>
-                <li>☔️ {{ _("Rain probability, color scale from 0 (white) to 100&percnt; (red).") }}</li>
-                <li>🌡 {{ _("Temperature in degree Celcius. Scale from 0<abbr title='degrees Celcius'>°C</abbr> (blue) to white (19<abbr title='degrees Celcius'>°C</abbr>) and from white to orange (30<abbr title='degrees Celcius'>°C</abbr>).") }}</li>
-                <li>🥶 {{ _("Apparent temperature, in degree Celcius. Same scale as temperature.") }}</li>
+                    🌧 {{ _('Precipitation in millimeters per hour.') }}
+                    {{ _('Color scale from 0 (white) to 100&percnt; (red), based on (rain probability × preciptation) capped at %(max_rain)s<abbr title=\'millimeters\'>mm</abbr>.', max_rain=max_rain) }}</li>
+                <li>☔️ {{ _('Rain probability, color scale from 0 (white) to 100&percnt; (red).') }}</li>
+                <li>🌡 {{ _('Temperature in degree Celcius. Scale from 0<abbr title=\'degrees Celcius\'>°C</abbr> (blue) to white (19<abbr title=\'degrees Celcius\'>°C</abbr>) and from white to orange (30<abbr title=\'degrees Celcius\'>°C</abbr>).') }}</li>
+                <li>🥶 {{ _('Apparent temperature, in degree Celcius. Same scale as temperature.') }}</li>
             </ul>
         </details>
 
@@ -288,25 +288,28 @@
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _("Very complicated opportunity indicator") }}">🎲</th>
+                        <th title="{{ _('Very complicated opportunity indicator') }}">🎲</th>
                         {% for hour in forecast.hour|valid_hour %}
                         <td style="background-color: {{ hour|proba_value|proba_gradient }};">
                             <span class="invisible_value value">
-                                {{ hour|proba_value }}{{_("&percnt;")}}
+                                {{ hour|proba_value }}{{_('&percnt;')}}
                             </span>
                         </td>
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _("Wind speed (kph)") }}">💨</th>
+                        <th title="{{ _('Wind speed (kph)') }}">💨</th>
                         {% for hour in forecast.hour|valid_hour %}
                         <td style="background-color: {{ hour.wind_kph|gradient(max_wind) }};">
-                            <span class="value">{{ hour.wind_kph }}</span>
+                            <span class="value">
+                                <span>{{ hour.wind_kph|wind_repeat('💨') }}</span>
+                                <small>{{ hour.wind_kph }}{{ _('kph') }}</small>
+                            </span>
                         </td>
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _("Wind direction") }}">🧭</th>
+                        <th title="{{ _('Wind direction') }}">🧭</th>
                         {% for hour in forecast.hour|valid_hour %}
                         <td>
                             <span class="value">
@@ -321,23 +324,23 @@
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _("Chance of rain") }}">☔️</th>
+                        <th title="{{ _('Chance of rain') }}">☔️</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td class="cell_precipitation" style="--bg-color: hsl(210, 80%, {{ 100 - hour.chance_of_rain / 2 }}%); --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _("Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.", chance_of_rain=hour.chance_of_rain, percent=_("&percnt;"), precip_mm=hour.precip_mm ) }}">
-                            <span class="value">{{ hour.precip_mm }}{{_("mm")}}</span>
+                        <td class="cell_precipitation" style="--bg-color: hsl(210, 80%, {{ 100 - hour.chance_of_rain / 2 }}%); --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precip_mm=hour.precip_mm ) }}">
+                            <span class="value"><small>{{ hour.precip_mm }}{{_("mm")}}</small></span>
                         </td>
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _("Temperature") }}">🌡</th>
+                        <th title="{{ _('Temperature') }}">🌡</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.temp_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.temp_c }}{{_("°C")}}</span></td>
+                        <td style="background-color: {{ hour.temp_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.temp_c }}{{_('°C')}}</span></td>
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _("Feels like") }}">🥶</th>
+                        <th title="{{ _('Feels like') }}">🥶</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.feelslike_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.feelslike_c }}{{_("°C")}}</span></td>
+                        <td style="background-color: {{ hour.feelslike_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.feelslike_c }}{{_('°C')}}</span></td>
                         {% endfor %}
                     </tr>
                 </tbody>
@@ -348,17 +351,17 @@
         {% endif %}
         <footer class="row flex-align-items-center">
             <div class="col-9-lg">
-                {{ _("Based on an original idea by abulte:") }} <a href="https://github.com/abulte/velo-weather">Github:abulte/velo-weather</a>
-                 | <a href="https://www.buymeacoffee.com/abulte">{{ _("Support abulte with a pizza") }} 🍕</a>
+                {{ _('Based on an original idea by abulte:') }} <a href="https://github.com/abulte/velo-weather">Github:abulte/velo-weather</a>
+                 | <a href="https://www.buymeacoffee.com/abulte">{{ _('Support abulte with a pizza') }} 🍕</a>
                  <br />
-                 {{ _("Fork by joachimesque:") }}
-                 <a href="https://github.com/joachimesque/velo-weather">Github:joachimesque/velo-weather</a> | {{ _("made in Montreuil 🍑 with pride") }}
+                 {{ _('Fork by joachimesque:') }}
+                 <a href="https://github.com/joachimesque/velo-weather">Github:joachimesque/velo-weather</a> | {{ _('made in Montreuil 🍑 with pride') }}
             </div>
 
             <div class="col form">
                 <form method="GET" action="/" id="languages-form">
                     <div class="grouped">
-                        <select name="lang" aria-label="{{ _("Language") }}">
+                        <select name="lang" aria-label="{{ _('Language') }}">
                             {% for lang, lang_name in languages.items() %}
                                 <option value="{{ lang }}" {% if get_locale() == lang %}selected{% endif %}>
                                     {{ lang_name }}
@@ -366,7 +369,7 @@
                             {% endfor %}
                         </select>
                         <button type="submit" class="button secondary">
-                            {{ _("Go !") }}
+                            {{ _('Go !') }}
                         </button>
                     </div>
                 </form>
