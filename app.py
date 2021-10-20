@@ -146,7 +146,7 @@ def air_quality_translation(air_quality):
 def air_quality_gradient(air_quality):
     index = air_quality_index(air_quality)
 
-    return gradient(index, 10, start=(.5,.8,.5)) if index > 0 else '#fff'
+    return gradient(index, 10, start=(.4,.8,.5)) if index > 0 else '#fff'
 
 
 @app.template_filter("wind_repeat")
@@ -220,7 +220,7 @@ def proba_value(hour):
         # and night has a malus anyway
         p = p * 1.3
 
-    return round((1 - p) * 100)
+    return max(round((1 - p) * 100), 0)
 
 
 @app.template_filter("proba_gradient")
