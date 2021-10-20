@@ -209,8 +209,15 @@ def proba_value(hour):
 
     p_precip = (chance * precip) / MAX_RAIN_ACCEPTABLE
     p_wind = wind / MAX_WIND_ACCEPTABLE
-    # wind is twice as annoying as rain
-    p = (p_precip + p_wind * 2) / 3
+    
+    if bool(hour["is_day"]):
+        # wind is twice as annoying as rain
+        p = (p_precip + p_wind * 2) / 3
+    else:
+        # rain is more dangerous by night
+        p = (p_precip + p_wind) / 2
+        # and night has a malus
+        p = p * 1.3
 
     return round((1 - p) * 100)
 
