@@ -1,6 +1,6 @@
 import os
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import pytz
 
 import json
@@ -101,6 +101,20 @@ def valid_hour(value):
             if hour <= MAX_HOUR and hour >= MIN_HOUR:
                 yield item
 
+
+@app.template_filter("get_classes")
+def get_classes(hour, timezone):
+    """Return CSS classes for the cell, based on the current hour"""
+    tz = pytz.timezone(timezone)
+    now = datetime.now(tz)
+    cell_datetime = datetime.fromtimestamp(hour["time_epoch"], tz=tz)
+
+    classes = ["cell_day"] if hour["is_day"] else ["cell_night"]
+
+    if cell_datetime < now - timedelta(hours=1):
+        classes.append("cell_past")
+
+    return " ".join(classes)
 
 @app.template_filter("gradient")
 def gradient(value, max, start=(0, .8, 1), end=(0,.8,.5)):

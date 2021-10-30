@@ -67,6 +67,14 @@
             font-family: sans-serif;
         }
 
+        th.cell_past, td.cell_past {
+            opacity: .5;
+        }
+
+        th.cell_night, td.cell_night {
+            background-color: hsla(200deg, 30%, 50%, .3);
+        }
+
         tr > :first-child {
             background-color: white;
             position: sticky;
@@ -96,10 +104,10 @@
             background-color: hsl(0, 0%, 100%);
             opacity: 1;
         }
-        td.cell_precipitation {
+        td.cell_custom {
             position: relative;
         }
-        td.cell_precipitation::before {
+        td.cell_custom::after {
             content: "";
             position: absolute;
             bottom: 0;
@@ -288,7 +296,9 @@
                     <tr>
                         <th></th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <th>{{ hour.time.split(' ')[-1].split(':')[0] }}</th>
+                        <th class="{{ hour|get_classes(data.location.tz_id) }}">
+                            {{ hour.time.split(' ')[-1].split(':')[0] }}
+                        </th>
                         {% endfor %}
                     </tr>
                 </thead>
@@ -296,13 +306,15 @@
                     <tr>
                         <th title="Forecast icon"></th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td><img style="max-width: 25px;" src="{{ hour.condition.icon }}" alt="{{ hour.condition.code|localized_condition }}"></td>
+                        <td class="{{ hour|get_classes(data.location.tz_id) }}">
+                            <img style="max-width: 25px;" src="{{ hour.condition.icon }}" alt="{{ hour.condition.code|localized_condition }}">
+                        </td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th title="{{ _('Very complicated opportunity indicator') }}">🎲</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour|proba_gradient }};">
+                        <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour|proba_gradient }}; --bg-height: 100%;">
                             <strong class="invisible_value value">
                                 {{ hour|proba_value }}
                             </strong>
@@ -312,7 +324,7 @@
                     <tr>
                         <th title="{{ _('Wind speed (kph)') }}">💨</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td>
+                        <td class="{{ hour|get_classes(data.location.tz_id) }}">
                             <span class="value">
                                 <span>{{ hour.wind_kph|wind_repeat('💨') }}</span>
                                 <small>{{ hour.wind_kph }}{{ _('kph') }}</small>
@@ -323,13 +335,13 @@
                     <tr>
                         <th title="{{ _('Wind direction') }}">🧭</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td>
+                        <td class="{{ hour|get_classes(data.location.tz_id) }}">
                             <span class="value">
                                 <span aria-hidden class="is-inline-block" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
                                 <small>
-                                    <abbr title="{{ hour.wind_dir|localized_azimuth|last }}">
-                                        {{ hour.wind_dir|localized_azimuth|first }}
-                                    </abbr>
+                                <abbr title="{{ hour.wind_dir|localized_azimuth|last }}">
+                                    {{ hour.wind_dir|localized_azimuth|first }}
+                                </abbr>
                                 </small>
                             </span>
                         </td>
@@ -338,7 +350,7 @@
                     <tr>
                         <th title="{{ _('Precipitation (mm)') }}">☔️</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td class="cell_precipitation" style="--bg-color: {{ hour.precip_mm|precip_gradient }}; --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precip_mm=hour.precip_mm ) }}">
+                        <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.precip_mm|precip_gradient }}; --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precip_mm=hour.precip_mm ) }}">
                             <span class="value"><small>{{ hour.precip_mm }}{{_("mm")}}</small></span>
                         </td>
                         {% endfor %}
@@ -346,13 +358,17 @@
                     <tr>
                         <th title="{{ _('Temperature') }}">🌡</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.temp_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.temp_c }}{{_('°C')}}</span></td>
+                        <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.temp_c|gradient_temp(13, 19) }}; --bg-height: 100%;">
+                            <span class="value">{{ hour.temp_c }}{{_('°C')}}</span>
+                        </td>
                         {% endfor %}
                     </tr>
                     <tr>
                         <th title="{{ _('Feels like') }}">🥶</th>
                         {% for hour in forecast.hour|valid_hour %}
-                        <td style="background-color: {{ hour.feelslike_c|gradient_temp(13, 19) }};"><span class="value">{{ hour.feelslike_c }}{{_('°C')}}</span></td>
+                        <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.feelslike_c|gradient_temp(13, 19) }}; --bg-height: 100%;">
+                            <span class="value">{{ hour.feelslike_c }}{{_('°C')}}</span>
+                        </td>
                         {% endfor %}
                     </tr>
                 </tbody>
