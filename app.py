@@ -236,7 +236,7 @@ def day(value, format="%A %d %b"):
 @app.template_filter("proba_value")
 def proba_value(hour):
     """Compute a probability and output percentage"""
-    # chance = int(hour["chance_of_rain"]) / 100
+    chance = round(int(hour["chance_of_rain"]) / (100 / 3))
     precip = min(hour["precip_mm"], MAX_RAIN_ACCEPTABLE)
     wind = min(hour["wind_kph"], MAX_WIND_ACCEPTABLE)
     temp = hour["temp_c"]
@@ -244,7 +244,8 @@ def proba_value(hour):
 
     proba = 0
 
-    # rain is annoying (0-10)
+    # rain is annoying (0-3 chance + 0-10 precip mm)
+    proba += chance
     proba += 10 * precip / MAX_RAIN_ACCEPTABLE
     # wind is twice as annoying (0-20)
     proba += 20 * wind / MAX_WIND_ACCEPTABLE
