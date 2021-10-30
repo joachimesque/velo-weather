@@ -34,8 +34,17 @@ app.jinja_env.globals['get_locale'] = get_locale
 
 # top of the scale for wind, kph
 MAX_WIND_ACCEPTABLE = 35
+
 # top of the scale for rain, mm per hour
-MAX_RAIN_ACCEPTABLE = 1.5
+# below 2mm per hour is "light rain"
+MAX_RAIN_ACCEPTABLE = 2
+# alert level for rain, mm per hour
+# 7.6mm per hour and more is "heavy rain"
+PRECIP_ALERT = 7.6
+
+# top and bottom of the temp scale, in °C
+MIN_TEMP_ACCEPTABLE = -5
+MAX_TEMP_ACCEPTABLE = 35
 
 # scale of hours of the day
 MIN_HOUR = 7
@@ -63,7 +72,7 @@ def index():
         data = r.json()
     return render_template("index.html",
                             data=data,
-                            max_rain=MAX_RAIN_ACCEPTABLE,
+                            max_rain=PRECIP_ALERT,
                             max_wind=MAX_WIND_ACCEPTABLE,
                             languages=app.config['LANGUAGES'])
 
@@ -161,8 +170,17 @@ def wind_repeat(speed_kph, character):
 def precip_percent(precip_mm):
     """Handle vertical scale for precip_mm"""
     precip_mm = precip_mm + 1 if precip_mm > 0 else precip_mm
-    precip_mm = min(precip_mm, 6)
-    return (precip_mm / 6) * 100
+    precip_mm = min(precip_mm, PRECIP_ALERT)
+    return (precip_mm / PRECIP_ALERT) * 100
+
+
+@app.template_filter("precip_gradient")
+def precip_gradient(precip_mm):
+    """Handle gradient for precip_mm"""
+    if precip_mm >= PRECIP_ALERT:
+        return '#000'
+    
+    return "hsl(210, 80%, 50%)"
 
 
 @app.template_filter("gradient_temp")
@@ -205,30 +223,48 @@ def day(value, format="%A %d %b"):
 @app.template_filter("proba_value")
 def proba_value(hour):
     """Compute a probability and output percentage"""
-    chance = int(hour["chance_of_rain"]) / 100
+    # chance = int(hour["chance_of_rain"]) / 100
     precip = min(hour["precip_mm"], MAX_RAIN_ACCEPTABLE)
     wind = min(hour["wind_kph"], MAX_WIND_ACCEPTABLE)
+    temp = hour["temp_c"]
+    feelslike = hour["feelslike_c"]
 
-    p_precip = (chance * precip) / MAX_RAIN_ACCEPTABLE
-    p_wind = wind / MAX_WIND_ACCEPTABLE
-    
-    # wind is twice as annoying as rain
-    p = (p_precip + p_wind * 2) / 3
+    proba = 0
 
-    # by night
-    if not bool(hour["is_day"]):
-        # rain is more dangerous
-        p = p + p_precip / 5
-        # and night has a malus anyway
-        p = p * 1.3
+    # rain is annoying (0-10)
+    proba += 10 * precip / MAX_RAIN_ACCEPTABLE
+    # wind is twice as annoying (0-20)
+    proba += 20 * wind / MAX_WIND_ACCEPTABLE
 
-    return max(round((1 - p) * 100), 0)
+    if temp < 0 and precip > 0:
+        # precipitations and cold cause ice on the road
+        proba += 10
+
+    if feelslike <= MIN_TEMP_ACCEPTABLE:
+        # temperatures below -5 feel worse (5-10)
+        proba += abs(max(MIN_TEMP_ACCEPTABLE - 5, feelslike))
+
+    if feelslike >= MAX_TEMP_ACCEPTABLE:
+        # temperatures above 35 feel worse (5-10)
+        proba += min(MAX_TEMP_ACCEPTABLE + 5, feelslike) - (MAX_TEMP_ACCEPTABLE - 5)
+
+    if not hour["is_day"]:
+        # rain is more dangerous by night (0-5)
+        proba += 5 * precip / MAX_RAIN_ACCEPTABLE
+
+    return round(proba)
 
 
 @app.template_filter("proba_gradient")
-def proba_gradient(probability):
+def proba_gradient(hour):
     """Output gradient color"""
-    return gradient(probability, max=100, start=(0,.8,.6), end=(.4,.8,.5))
+    max_val = 30
+    probability = min(proba_value(hour), max_val)
+
+    start_color = (.4,.8,.5)
+    end_color = (0,.8,.6)
+
+    return gradient(probability, max=max_val, start=start_color, end=end_color)
 
 
 @app.template_filter("localized_condition")

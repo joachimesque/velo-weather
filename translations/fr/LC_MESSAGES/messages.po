@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-20 21:16+0200\n"
+"POT-Creation-Date: 2021-10-30 17:29+0200\n"
 "PO-Revision-Date: 2021-09-20 21:34+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -18,188 +18,181 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: app.py:130
+#: app.py:140
 msgid "No data"
 msgstr "Aucune donnée"
 
-#: app.py:131 app.py:132
+#: app.py:141 app.py:142
 msgid "Very good"
 msgstr "Très bonne"
 
-#: app.py:133 app.py:134
+#: app.py:143 app.py:144
 msgid "Good"
 msgstr "Bonne"
 
-#: app.py:135
+#: app.py:145
 msgid "Average"
 msgstr "Moyenne"
 
-#: app.py:136 app.py:137
+#: app.py:146 app.py:147
 msgid "Below average"
 msgstr "Médiocre"
 
-#: app.py:138 app.py:139
+#: app.py:148 app.py:149
 msgid "Bad"
 msgstr "Mauvaise"
 
-#: app.py:140
+#: app.py:150
 msgid "Very bad"
 msgstr "Très mauvaise"
 
-#: app.py:208
+#: app.py:218
 msgid "EEEE, MMMM d"
 msgstr "EEEE d MMMM"
 
-#: templates/index.html:208
+#: templates/index.html:185
 msgid "No data found"
 msgstr "Aucune donnée trouvée"
 
-#: templates/index.html:217
+#: templates/index.html:194
 msgid "Location"
 msgstr "Localisation"
 
-#: templates/index.html:219 templates/index.html:408
+#: templates/index.html:196 templates/index.html:384
 msgid "Go !"
 msgstr "Aller&nbsp;!"
 
-#: templates/index.html:226
+#: templates/index.html:203
 msgid "No data found. Wrong location?"
 msgstr "Aucune donnée trouvée. Mauvaise localisation&nbsp;?"
 
-#: templates/index.html:230
+#: templates/index.html:207
 msgid "Now"
 msgstr "En ce moment"
 
-#: templates/index.html:234 templates/index.html:281 templates/index.html:373
-#: templates/index.html:379
+#: templates/index.html:211 templates/index.html:258 templates/index.html:349
+#: templates/index.html:355
 msgid "°C"
 msgstr "&nbsp;°C"
 
-#: templates/index.html:240
+#: templates/index.html:217
 msgid "Updated"
 msgstr "Mise à jour"
 
-#: templates/index.html:244
+#: templates/index.html:221
 msgid "Air quality"
 msgstr "Qualité de l’air"
 
-#: templates/index.html:251
+#: templates/index.html:228
 msgid "Wind speed"
 msgstr "Vitesse du vent"
 
-#: templates/index.html:254 templates/index.html:261 templates/index.html:342
+#: templates/index.html:231 templates/index.html:238 templates/index.html:318
 msgid "kph"
 msgstr "&nbsp;km/h"
 
-#: templates/index.html:258
+#: templates/index.html:235
 msgid "Wind gust"
 msgstr "Rafales"
 
-#: templates/index.html:265 templates/index.html:348
+#: templates/index.html:242 templates/index.html:324
 msgid "Wind direction"
 msgstr "Direction du vent"
 
-#: templates/index.html:276
+#: templates/index.html:253
 msgid "Precipitation"
 msgstr "Précipitation"
 
-#: templates/index.html:277 templates/index.html:366
+#: templates/index.html:254 templates/index.html:342
 msgid "mm"
 msgstr "&nbsp;mm"
 
-#: templates/index.html:280 templates/index.html:377
+#: templates/index.html:257 templates/index.html:353
 msgid "Feels like"
 msgstr "Température ressentie"
 
-#: templates/index.html:287
+#: templates/index.html:264
 msgid "Legend"
 msgstr "Légende"
 
-#: templates/index.html:290
-msgid "A ride opportunity indicator, based on rain and wind."
+#: templates/index.html:267
+msgid ""
+"A ride opportunity indicator, based on rain, wind, day/night, extreme "
+"temps and risk of ice. The higher the number, the worse the conditions "
+"and the more dangerous the ride."
 msgstr ""
-"Un indicateur d’opportunité de sortie à vélo, basée sur la pluie et le "
-"vent."
+"Indicateur d’opportunité de sortie à vélo, basée sur la pluie, le vent, "
+"le jour/nuit, les températures extrêmes et le risque de verglas. Plus le "
+"nombre est haut, plus les conditions sont mauvaises et plus le danger "
+"augmente."
 
-#: templates/index.html:291
-msgid "See source code <code>def proba(hour):</code> for details."
+#: templates/index.html:268
+msgid "See source code <code>def proba_value(hour):</code> for details."
 msgstr ""
-"Regardez dans le code source <code>def proba(hour):</code> pour avoir des"
-" détails."
+"Regardez dans le code source <code>def proba_value(hour):</code> pour "
+"avoir des détails."
 
-#: templates/index.html:292
-msgid "Linear gradient from 0 (white) to 100 (green)."
-msgstr "Dégradé linéaire de 0 (blanc) à 100 (vert)."
+#: templates/index.html:269
+msgid "Linear gradient from 0 (green) to 40 (red)."
+msgstr "Dégradé linéaire de 0 (vert) à 100 (rouge)."
 
-#: templates/index.html:294
+#: templates/index.html:271
 #, python-format
 msgid ""
-"Wind speed in kilometers per hour, color scale from 0 (white) to "
-"%(max_wind)s (red), capped at the max wind speed of %(max_wind)s<abbr "
-"title='kilometers per hour'>kph</abbr>."
+"Wind speed in kilometers per hour, shown with the repetiton of the emoji "
+"💨. Zero to two is okay, three and four (for speeds above "
+"%(max_wind)s<abbr title='kilometers per hour'>kph</abbr>) are strong to "
+"very strong winds."
 msgstr ""
-"Vitesse du vent en kilomètres par heure, sur une echelle de 0 (white) à "
-"%(max_wind)s (rouge), limité à la vitesse maximum de "
-"%(max_wind)s&nbsp;<abbr title='kilomètres/heure'>km/h</abbr>."
+"Vitesse du vent en kilomètres par heure, montrée par la répétition de "
+"l’emoji 💨. Jusqu’à deux le vent est supportable, à trois ou quatre "
+"(vitesses au delà de %(max_wind)s&nbsp;<abbr title='kilomètres "
+"heure'>km/h</abbr>) le vent est fort à très fort."
 
-#: templates/index.html:295
+#: templates/index.html:272
 msgid "Wind directions, in degrees."
 msgstr "Direction du vent."
 
-#: templates/index.html:297
+#: templates/index.html:274
 msgid "Precipitation in millimeters per hour."
 msgstr "Précipitation en millimètres par heure."
 
-#: templates/index.html:298
+#: templates/index.html:275
 #, python-format
-msgid ""
-"Color scale from 0 (white) to 100&percnt; (red), based on (rain "
-"probability × preciptation) capped at %(max_rain)s<abbr "
-"title='millimeters'>mm</abbr>."
+msgid "Vertical scale from 0 to %(max_rain)s<abbr title='millimeters'>mm</abbr>."
 msgstr ""
-"Échelle de couleur de 0 (blanc) à 100&nbsp;&percnt; (rouge), basée sur "
-"(probabilité de pluie × précipitations), limité à %(max_rain)s&nbsp;<abbr"
-" title='millimètres'>mm</abbr>."
+"Échelle verticale de 0 à %(max_rain)s&nbsp;<abbr "
+"title='millimètres'>mm</abbr>."
 
-#: templates/index.html:299
-msgid "Rain probability, color scale from 0 (white) to 100&percnt; (red)."
-msgstr ""
-"Probabilité de pluie, échelle de couleur de 0 (blanc) à 100&nbsp;&percnt;"
-" (rouge)."
-
-#: templates/index.html:300
+#: templates/index.html:276
 msgid ""
 "Temperature in degree Celcius. Scale from 0<abbr title='degrees "
-"Celcius'>°C</abbr> (blue) to white (19<abbr title='degrees "
-"Celcius'>°C</abbr>) and from white to orange (30<abbr title='degrees "
-"Celcius'>°C</abbr>)."
+"Celcius'>°C</abbr> (blue) to 12<abbr title='degrees Celcius'>°C</abbr> "
+"(white) and from 19<abbr title='degrees Celcius'>°C</abbr> to 35<abbr "
+"title='degrees Celcius'>°C</abbr> (orange)."
 msgstr ""
-"Température, en degré Celcius. Échelle de 0&nbsp;<abbr title='degrés "
-"Celcius'>°C</abbr> (bleu) à blanc (19&nbsp;<abbr title='degrés "
-"Celcius'>°C</abbr>) et de blanc à orange (30&nbsp;<abbr title='degrees "
-"Celcius'>°C</abbr>)."
+"Température en degré Celcius. L’échelle va de 0&nbsp;<abbr title='degré "
+"Celcius'>°C</abbr> (bleu) à 12&nbsp;<abbr title='degré Celcius'>°C</abbr>"
+" (blanc), puis de 19&nbsp;<abbr title='degré Celcius'>°C</abbr> à "
+"35&nbsp;<abbr title='degré Celcius'>°C</abbr> (orange)."
 
-#: templates/index.html:301
+#: templates/index.html:277
 msgid "Apparent temperature, in degree Celcius. Same scale as temperature."
 msgstr "Température ressentie, en degré Celcius. Même échelle que la température."
 
-#: templates/index.html:327
+#: templates/index.html:303
 msgid "Very complicated opportunity indicator"
 msgstr "Indicateur d’opportunité super compliqué"
 
-#: templates/index.html:331 templates/index.html:365
-msgid "&percnt;"
-msgstr "&nbsp;&percnt;"
-
-#: templates/index.html:337
+#: templates/index.html:313
 msgid "Wind speed (kph)"
 msgstr "Vitesse du vent (km/h)"
 
-#: templates/index.html:363
+#: templates/index.html:339
 msgid "Precipitation (mm)"
 msgstr "Précipitation (mm)"
 
-#: templates/index.html:365
+#: templates/index.html:341
 #, python-format
 msgid ""
 "Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is "
@@ -208,27 +201,31 @@ msgstr ""
 "Le risque de pluie est %(chance_of_rain)s%(percent)s, et la précipitation"
 " est estimée à %(precip_mm)s millimètres."
 
-#: templates/index.html:371
+#: templates/index.html:341
+msgid "&percnt;"
+msgstr "&nbsp;&percnt;"
+
+#: templates/index.html:347
 msgid "Temperature"
 msgstr "Température"
 
-#: templates/index.html:390
+#: templates/index.html:366
 msgid "Based on an idea and code by abulte:"
 msgstr "Basé sur une idée et du code par abulte :"
 
-#: templates/index.html:391
+#: templates/index.html:367
 msgid "Support them with a pizza"
 msgstr "Offrez-lui une pizza"
 
-#: templates/index.html:393
+#: templates/index.html:369
 msgid "Fork by joachimesque:"
 msgstr "Fork par joachimesque :"
 
-#: templates/index.html:394
+#: templates/index.html:370
 msgid "made in Montreuil 🍑 with pride"
 msgstr "fait à Montreuil 🍑 avec fierté"
 
-#: templates/index.html:400
+#: templates/index.html:376
 msgid "Language"
 msgstr "Langue"
 
