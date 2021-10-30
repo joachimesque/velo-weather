@@ -133,6 +133,9 @@
             height: 1.6em;
             width: auto;
         }
+        .one_line {
+            white-space: nowrap;
+        }
 
         @media(min-width: 768px) {
             /* CURRENT WEATHER */
@@ -326,7 +329,9 @@
                         {% for hour in forecast.hour|valid_hour %}
                         <td class="{{ hour|get_classes(data.location.tz_id) }}">
                             <span class="value">
-                                <span>{{ hour.wind_kph|wind_repeat('💨') }}</span>
+                                <span class="one_line">
+                                    {{ hour.wind_kph|wind_repeat('💨') }}
+                                </span>
                                 <small>{{ hour.wind_kph }}{{ _('kph') }}</small>
                             </span>
                         </td>

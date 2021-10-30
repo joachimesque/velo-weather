@@ -36,11 +36,10 @@ app.jinja_env.globals['get_locale'] = get_locale
 MAX_WIND_ACCEPTABLE = 35
 
 # top of the scale for rain, mm per hour
-# below 2mm per hour is "light rain"
-MAX_RAIN_ACCEPTABLE = 2
-# alert level for rain, mm per hour
 # 7.6mm per hour and more is "heavy rain"
-PRECIP_ALERT = 7.6
+MAX_RAIN_ACCEPTABLE = 7.6
+# alert level for rain, mm per hour
+PRECIP_ALERT = MAX_RAIN_ACCEPTABLE * 2
 
 # top and bottom of the temp scale, in °C
 MIN_TEMP_ACCEPTABLE = -5
@@ -72,7 +71,7 @@ def index():
         data = r.json()
     return render_template("index.html",
                             data=data,
-                            max_rain=PRECIP_ALERT,
+                            max_rain=MAX_RAIN_ACCEPTABLE,
                             max_wind=MAX_WIND_ACCEPTABLE,
                             languages=app.config['LANGUAGES'])
 
@@ -184,8 +183,8 @@ def wind_repeat(speed_kph, character):
 def precip_percent(precip_mm):
     """Handle vertical scale for precip_mm"""
     precip_mm = precip_mm + 1 if precip_mm > 0 else precip_mm
-    precip_mm = min(precip_mm, PRECIP_ALERT)
-    return (precip_mm / PRECIP_ALERT) * 100
+    precip_mm = min(precip_mm, MAX_RAIN_ACCEPTABLE)
+    return (precip_mm / MAX_RAIN_ACCEPTABLE) * 100
 
 
 @app.template_filter("precip_gradient")
@@ -202,7 +201,7 @@ def gradient_temp(temp, ideal_min, ideal_max):
     """Handle gradient for temp around ideal temp"""
     _max = 35
     temp = temp if temp > 0 else 0
-    temp = temp if temp < _max else temp
+    temp = temp if temp < _max else _max
 
     gradient = []
 
