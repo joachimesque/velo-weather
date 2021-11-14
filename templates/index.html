@@ -10,6 +10,9 @@
     <link rel="manifest" href="{{ asset_url('site.webmanifest') }}">
     {% if data %}
         <link rel="icon" type="image/png" href="{{ data.current.condition.icon }}">
+    {% else %}
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset_url('favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset_url('favicon-16x16.png') }}">
     {% endif %}
     <title>🚴💨 Velo Weather</title>
 
