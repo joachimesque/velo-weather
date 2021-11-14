@@ -449,30 +449,39 @@
             </div>
 
         </footer>
-        <script>
-            function submitForm() {
-                document.getElementById("location-form").submit()
+        <script type="text/javascript">
+            // Location form utilities
+
+            var locationInput = document.getElementById("location-input");
+            var locationsList = document.getElementById("locations-list");
+            locationInput.onfocus = function (e) {
+                e.target.value = "";
             }
-            var locEl = document.getElementById("location-input")
-            var locListeEl = document.getElementById("locations-list")
-            locEl.onfocus = function (e) {
-                e.target.value = ""
+            locationInput.onchange = function () {
+                document.getElementById("location-form").submit();
+                locationInput.disabled = true;
             }
-            locEl.onchange = function () {
-                submitForm()
-                locEl.disabled = true
-            }
-            locEl.oninput = function (e) {
-                if (!window.fetch) return
+            locationInput.oninput = function (e) {
+                if (!window.fetch) return;
                 window.fetch("https://geo.api.gouv.fr/communes?nom=" + e.target.value + "&boost=population&limit=5")
                 .then(function (r) { return r.json() })
                 .then(function(data) {
                     if (!data.length) return
-                    locListeEl.innerHTML = data.map(l => {
-                        return "<option value='" + l.nom + "'></option>"
+                    locationsList.innerHTML = data.map(l => {
+                        return "<option value='" + l.nom + "'></option>";
                     })
-                })
+                });
             }
+        </script>
+        <script type="text/javascript">
+            // Scroll today's table to current time column
+
+            var scrollEl = document.querySelector("th.cell_past ~ th:not(.cell_past)");
+            var scrollElWrapper = scrollEl.closest(".table-container");
+            scrollElWrapper.scroll({
+                left: scrollEl.offsetLeft - scrollElWrapper.offsetWidth / 2,
+                behavior: 'smooth'
+            });
         </script>
     </div>
 </body>
