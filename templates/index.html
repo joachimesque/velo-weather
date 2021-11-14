@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="https://unpkg.com/chota@latest">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/plex.css') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset_url('favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset_url('favicon-16x16.png') }}">
     <link rel="manifest" href="{{ asset_url('site.webmanifest') }}">
     {% if data %}
-        <link rel="icon" href="{{ data.current.condition.icon }}">
+        <link rel="icon" type="image/png" href="{{ data.current.condition.icon }}">
     {% endif %}
     <title>🚴💨 Velo Weather</title>
 
