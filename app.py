@@ -8,11 +8,11 @@ import requests
 from colour import Color
 from itertools import repeat
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, url_for
 from flask_babel import Babel, format_date, _
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 app.config['LANGUAGES'] = {'en': 'English', 'fr': 'Français'}
@@ -21,16 +21,10 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 babel = Babel(app)
 
-@babel.localeselector
-def get_locale():
-    if request.args.get('lang'):
-        session['lang'] = request.args.get('lang')
-    else:
-        if not 'lang' in session:
-            session['lang'] = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
-    return session.get('lang', 'en')
 
-app.jinja_env.globals['get_locale'] = get_locale
+# ----------
+# APP CONFIG
+# ----------
 
 # top of the scale for wind, kph
 MAX_WIND_ACCEPTABLE = 35
@@ -49,6 +43,10 @@ MAX_TEMP_ACCEPTABLE = 35
 MIN_HOUR = 7
 MAX_HOUR = 20
 
+
+# -----------
+# PAGE RENDER
+# -----------
 
 @app.route("/")
 def index():
@@ -75,6 +73,10 @@ def index():
                             max_wind=MAX_WIND_ACCEPTABLE,
                             languages=app.config['LANGUAGES'])
 
+
+# ----------------
+# TEMPLATE FILTERS
+# ----------------
 
 @app.template_filter("valid_day")
 def valid_day(value, timezone="Europe/Paris"):
@@ -114,6 +116,7 @@ def get_classes(hour, timezone):
         classes.append("cell_past")
 
     return " ".join(classes)
+
 
 @app.template_filter("gradient")
 def gradient(value, max, start=(0, .8, 1), end=(0,.8,.5)):
@@ -312,3 +315,31 @@ def localized_azimuth(code):
     azimuth = a_data[code][get_locale()]
 
     return azimuth
+
+
+# -------------
+# TEMPLATE TAGS
+# -------------
+
+@babel.localeselector
+def get_locale():
+    if request.args.get('lang'):
+        session['lang'] = request.args.get('lang')
+    else:
+        if not 'lang' in session:
+            session['lang'] = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+    return session.get('lang', 'en')
+
+app.jinja_env.globals['get_locale'] = get_locale
+
+
+def asset_url(asset_path):
+    """Returns a full asset URL from path"""
+
+    domain = request.host_url
+    domain = domain[:-1] if domain[:-1] == "/" else domain
+
+    return "%s%s" % (domain, url_for('static', filename=asset_path))
+
+app.jinja_env.globals['asset_url'] = asset_url
+
