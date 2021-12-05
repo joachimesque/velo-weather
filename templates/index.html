@@ -32,10 +32,10 @@
             {% set location = data.location.name + ", " + data.location.country if data else _('No data found') %}
             <header>
                 <div class="row flex-align-items-center">
-                    <div class="col header_logo">
+                    <a class="col header_logo" href="/">
                         <img class="logo" alt="" src="{{ asset_url('images/logo.svg') }}" />
                         <h1>Velo Weather</h1>
-                    </div>
+                    </a>
                     <div class="col form">
                         <form method="GET" action="/" id="location-form">
                             <div class="grouped">

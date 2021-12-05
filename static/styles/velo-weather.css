@@ -10,11 +10,12 @@ h1, h2, h3, h4, h5, h6 {
 a[href] {
     text-decoration: underline;
 }
-.header_logo {
+a.header_logo {
     padding: 1rem 0;
     display: flex;
     gap: 1rem;
     align-items: center;
+    text-decoration: none;
 }
 .header_logo img.logo {
     width: 6rem;
