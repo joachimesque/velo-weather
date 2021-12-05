@@ -142,13 +142,13 @@
                                 {% if use_relative_temps %}
                                     {{ _('The ideal temperature range is based on last weeks weather, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
                                 {% else %}
-                                    {{ _('The ideal temperature range is the default setting, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
+                                    {{ _('The ideal temperature range is the default setting, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=default_ideal_temps[0], ideal_max=default_ideal_temps[1]) }}
                                 {% endif %}
                                 <br />
                                 {% with value = 0 if use_relative_temps else 1 %}
                                     <a href="?use_relative_temps={{ value }}#settings">
                                     {% if use_relative_temps %}
-                                        {{ _('Use the default ideal temperature range between %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> and %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
+                                        {{ _('Use the default ideal temperature range between %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> and %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=default_ideal_temps[0], ideal_max=default_ideal_temps[1]) }}
                                     {% else %}
                                         {{ _('Base the ideal temperature range on last week’s weather') }}
                                     {% endif %}

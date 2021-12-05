@@ -101,6 +101,7 @@ def index():
         max_wind=MAX_WIND_ACCEPTABLE,
         languages=app.config["LANGUAGES"],
         ideal_temps=ideal_temps,
+        default_ideal_temps=IDEAL_TEMPS,
         extreme_temps=(MIN_TEMP_ACCEPTABLE, MAX_TEMP_ACCEPTABLE),
         use_relative_temps=use_relative_temps,
     )
