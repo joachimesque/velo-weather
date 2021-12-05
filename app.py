@@ -1,18 +1,25 @@
-import os
-
-from datetime import date, datetime, timedelta
-import pytz
-import math
-
 import json
-import requests
-from colour import Color
+import math
+import os
+import urllib
+from datetime import date
+from datetime import datetime
+from datetime import timedelta
 from itertools import repeat
 
-from flask import Flask, render_template, request, session, url_for
-from flask_babel import Babel, format_date, _
-
-from flask_assets import Environment, Bundle
+import pytz
+import requests
+from colour import Color
+from flask import Flask
+from flask import render_template
+from flask import request
+from flask import session
+from flask import url_for
+from flask_assets import Bundle
+from flask_assets import Environment
+from flask_babel import _
+from flask_babel import Babel
+from flask_babel import format_date
 
 app = Flask(__name__, static_url_path="")
 assets = Environment(app)
@@ -59,6 +66,12 @@ PRECIP_ALERT = MAX_RAIN_ACCEPTABLE * 2
 MIN_TEMP_ACCEPTABLE = -5
 MAX_TEMP_ACCEPTABLE = 35
 
+# ideal temps
+IDEAL_TEMPS = (13, 19)
+
+# history days
+HISTORY_DAYS = 5
+
 # scale of hours of the day
 MIN_HOUR = 7
 MAX_HOUR = 20
@@ -71,32 +84,99 @@ MAX_HOUR = 20
 
 @app.route("/")
 def index():
-    data = None
-    q = request.args.get("location", None)
+    query = get_property_from_args_or_session("location", "Montreuil, France")
+    use_relative_temps = get_property_from_args_or_session("use_relative_temps", 0)
+    use_relative_temps = bool(int(use_relative_temps))
 
-    if q:
-        session["location"] = q
-    else:
-        if session.get("location", None):
-            q = session.get("location")
-        else:
-            q = "Montreuil, France"
+    params = (("q", query), ("days", "10"), ("aqi", "yes"), ("alerts", "no"))
 
-    api_key = os.getenv("WEATHER_API_KEY")
-    r = requests.get(
-        f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=yes&alerts=no"
-    )
-    # probably location unknow
-    if r.status_code != 400:
-        r.raise_for_status()
-        data = r.json()
+    data = get_api_data("forecast", params)
+
+    ideal_temps = get_relative_temps(query, data) if use_relative_temps else IDEAL_TEMPS
+
     return render_template(
         "index.html",
         data=data,
         max_rain=MAX_RAIN_ACCEPTABLE,
         max_wind=MAX_WIND_ACCEPTABLE,
         languages=app.config["LANGUAGES"],
+        ideal_temps=ideal_temps,
+        extreme_temps=(MIN_TEMP_ACCEPTABLE, MAX_TEMP_ACCEPTABLE),
+        use_relative_temps=use_relative_temps,
     )
+
+
+# ----------------
+# HELPERS
+# ----------------
+
+
+def get_api_data(api_name, params):
+    """returns data from API"""
+
+    data = None
+
+    api_key = os.getenv("WEATHER_API_KEY")
+
+    params = params + (("key", api_key),)
+    encoded_params = urllib.parse.urlencode(params)
+
+    response = requests.get(
+        f"https://api.weatherapi.com/v1/{api_name}.json?{encoded_params}"
+    )
+
+    # probably location unknow
+    if response.status_code != 400:
+        response.raise_for_status()
+        data = response.json()
+
+    return data
+
+
+def get_property_from_args_or_session(prop_name, default):
+    """set value from args to session or retrieve value from session
+    if no args, then return value"""
+
+    prop_value = request.args.get(prop_name, None)
+
+    if prop_value:
+        session[prop_name] = prop_value
+    else:
+        if session.get(prop_name, None):
+            prop_value = session.get(prop_name)
+        else:
+            prop_value = default
+
+    return prop_value
+
+
+def get_relative_temps(query, data):
+    """return a (min, max) tuple of last week's daily temp average"""
+
+    if data is None:
+        return IDEAL_TEMPS
+
+    timezone = data["location"]["tz_id"]
+    tz = pytz.timezone(timezone)
+    now = datetime.now(tz)
+
+    temps = []
+
+    for i in range(HISTORY_DAYS):
+        delta = i + 1
+        date = now - timedelta(days=delta)
+        params = (("q", query), ("dt", date.strftime("%Y-%m-%d")))
+        history_data = get_api_data("history", params)
+        temps.append(history_data["forecast"]["forecastday"][0]["day"]["avgtemp_c"])
+
+    ideal_min, ideal_max = IDEAL_TEMPS
+
+    ideal = (
+        max(MIN_TEMP_ACCEPTABLE, min(ideal_min, math.floor(max(temps)))),
+        min(MAX_TEMP_ACCEPTABLE, max(ideal_max, math.ceil(min(temps)))),
+    )
+
+    return ideal
 
 
 # ----------------
@@ -230,28 +310,37 @@ def precip_gradient(precip_mm):
 
 
 @app.template_filter("gradient_temp")
-def gradient_temp(temp, ideal_min, ideal_max):
+def gradient_temp(temp, ideal_temps):
     """Handle gradient for temp around ideal temp"""
-    _max = 35
-    temp = temp if temp > 0 else 0
-    temp = temp if temp < _max else _max
+    temp = temp if temp > MIN_TEMP_ACCEPTABLE else MIN_TEMP_ACCEPTABLE
+    temp = temp if temp < MAX_TEMP_ACCEPTABLE else MAX_TEMP_ACCEPTABLE
 
     gradient = []
 
-    for temperature in range(ideal_min):
-        temp_luminance = 50 + (50 / ideal_min - 1) * temperature
+    ideal_min, ideal_max = ideal_temps
+
+    if ideal_min < MIN_TEMP_ACCEPTABLE:
+        ideal_min = MIN_TEMP_ACCEPTABLE
+
+    if ideal_max > MAX_TEMP_ACCEPTABLE:
+        ideal_max = MAX_TEMP_ACCEPTABLE
+
+    for temperature in range(ideal_min - MIN_TEMP_ACCEPTABLE):
+        temp_luminance = 50 + (50 / (ideal_min - MIN_TEMP_ACCEPTABLE)) * temperature
         gradient.append("hsl(220,100%,{}%)".format(round(temp_luminance)))
 
     for temperature in range(ideal_max - ideal_min):
         gradient.append("hsl(220,100%,100%)")
 
-    for temperature in range(_max - ideal_max + 1):
-        temp_luminance = 100 - (50 / (_max - ideal_max + 1)) * temperature
+    for temperature in range(MAX_TEMP_ACCEPTABLE - ideal_max + 1):
+        temp_luminance = (
+            100 - (50 / (MAX_TEMP_ACCEPTABLE - ideal_max + 1)) * temperature
+        )
         gradient.append("hsl(22,100%,{}%)".format(round(temp_luminance)))
 
     gradient.append("hsl(22,100%,50%)")
 
-    return gradient[round(temp)]
+    return gradient[round(temp) - MIN_TEMP_ACCEPTABLE]
 
 
 @app.template_filter("day")

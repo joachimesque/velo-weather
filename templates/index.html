@@ -121,10 +121,44 @@
                         <li>
                             ☔️ {{ _('Precipitation in millimeters per hour.') }}
                             {{ _('Vertical scale from 0 to %(max_rain)s<abbr title=\'millimeters\'>mm</abbr>.', max_rain=max_rain) }}</li>
-                        <li>🌡 {{ _('Temperature in degree Celcius. Scale from 0<abbr title=\'degrees Celcius\'>°C</abbr> (blue) to 12<abbr title=\'degrees Celcius\'>°C</abbr> (white) and from 19<abbr title=\'degrees Celcius\'>°C</abbr> to 35<abbr title=\'degrees Celcius\'>°C</abbr> (orange).') }}</li>
+                        <li>🌡 {{ _('Temperature in degree Celcius. Scale from %(extreme_min)s<abbr title=\'degrees Celcius\'>°C</abbr> (blue) to %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> (white) and from %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(extreme_max)s<abbr title=\'degrees Celcius\'>°C</abbr> (orange).', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1], extreme_min=extreme_temps[0], extreme_max=extreme_temps[1]) }}</li>
                         <li>🥶/😨/🙂/😊/🥵 {{ _('Apparent temperature, in degree Celcius. Same scale as temperature.') }}</li>
                     </ul>
                 </details>
+
+                {% with has_settings_in_url = request.args.get("use_relative_temps", None) is not none %}
+                    <details id="settings" {% if has_settings_in_url %}open{% endif %}>
+                        <summary>
+                            🎛 {{ _('Settings') }}
+                            {% if has_settings_in_url %}
+                                <span class="tag is-small text-success bd-success text-lowercase">
+                                    {{ _('Saved!') }}
+                                </span>
+                            {% endif %}
+                        </summary>
+                        <div>
+                            <ul>
+                                <li>
+                                {% if use_relative_temps %}
+                                    {{ _('The ideal temperature range is based on last weeks weather, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
+                                {% else %}
+                                    {{ _('The ideal temperature range is the default setting, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
+                                {% endif %}
+                                <br />
+                                {% with value = 0 if use_relative_temps else 1 %}
+                                    <a href="?use_relative_temps={{ value }}#settings">
+                                    {% if use_relative_temps %}
+                                        {{ _('Use the default ideal temperature range between %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> and %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
+                                    {% else %}
+                                        {{ _('Base the ideal temperature range on last week’s weather') }}
+                                    {% endif %}
+                                    </a>
+                                {% endwith %}
+                                </li>
+                            </ul>
+                        </div>
+                    </details>
+                {% endwith %}
 
                 {% set forecasts = data.forecast.forecastday %}
                 {% for forecast in forecasts|valid_day(data.location.tz_id) %}
@@ -203,7 +237,7 @@
                                     <tr>
                                         <th title="{{ _('Temperature') }}">🌡</th>
                                         {% for hour in forecast.hour|valid_hour %}
-                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.temp_c|gradient_temp(13, 19) }}; --bg-height: 100%;">
+                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.temp_c|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
                                                 <span class="value">{{ hour.temp_c }}{{_('°C')}}</span>
                                             </td>
                                         {% endfor %}
@@ -213,7 +247,7 @@
                                             {{ forecast.day.avgtemp_c|feelslike_emoji }}
                                         </th>
                                         {% for hour in forecast.hour|valid_hour %}
-                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.feelslike_c|gradient_temp(13, 19) }}; --bg-height: 100%;">
+                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.feelslike_c|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
                                                 <span class="value">{{ hour.feelslike_c }}{{_('°C')}}</span>
                                             </td>
                                         {% endfor %}
