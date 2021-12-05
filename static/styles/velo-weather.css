@@ -60,6 +60,9 @@ footer {
     display: inline-block;
     width: auto;
 }
+details {
+    margin: 1em 0 1rem;
+}
 section {
     margin: 2em 0 3rem;
 }
