@@ -11,8 +11,18 @@ from itertools import repeat
 from flask import Flask, render_template, request, session, url_for
 from flask_babel import Babel, format_date, _
 
+from flask_assets import Environment, Bundle
 
 app = Flask(__name__, static_url_path='')
+assets = Environment(app)
+
+js = Bundle('scripts/active_hour_scroll.js', 'scripts/location_autocomplete.js',
+            filters='jsmin', output='gen/packed.js')
+css = Bundle('styles/chota.min.css', 'styles/velo-weather.css', 'fonts/plex.css',
+            filters='cssmin', output='gen/packed.css')
+assets.register('js_all', js)
+assets.register('css_all', css)
+
 
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
 app.config['LANGUAGES'] = {'en': 'English', 'fr': 'Français'}

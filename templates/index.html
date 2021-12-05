@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{{ asset_url('styles/chota.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset_url('styles/velo-weather.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset_url('fonts/plex.css') }}">
+
+{% assets "css_all" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
+
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ asset_url('site.webmanifest') }}">
     {% if data %}
@@ -250,40 +252,11 @@
             </div>
 
         </footer>
-        <script type="text/javascript">
-            // Location form utilities
-
-            var locationInput = document.getElementById("location-input");
-            var locationsList = document.getElementById("locations-list");
-            locationInput.onfocus = function (e) {
-                e.target.value = "";
-            }
-            locationInput.onchange = function () {
-                document.getElementById("location-form").submit();
-                locationInput.disabled = true;
-            }
-            locationInput.oninput = function (e) {
-                if (!window.fetch) return;
-                window.fetch("https://geo.api.gouv.fr/communes?nom=" + e.target.value + "&boost=population&limit=5")
-                .then(function (r) { return r.json() })
-                .then(function(data) {
-                    if (!data.length) return
-                    locationsList.innerHTML = data.map(l => {
-                        return "<option value='" + l.nom + "'></option>";
-                    })
-                });
-            }
-        </script>
-        <script type="text/javascript">
-            // Scroll today's table to current time column
-
-            var scrollEl = document.querySelector("th.cell_past ~ th:not(.cell_past)");
-            var scrollElWrapper = scrollEl.closest(".table-container");
-            scrollElWrapper.scroll({
-                left: scrollEl.offsetLeft - scrollElWrapper.offsetWidth / 2,
-                behavior: 'smooth'
-            });
-        </script>
     </div>
+
+{% assets "js_all" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 </body>
 </html>
