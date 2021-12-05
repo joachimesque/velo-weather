@@ -2,6 +2,7 @@ import os
 
 from datetime import date, datetime, timedelta
 import pytz
+import math
 
 import json
 import requests
@@ -325,6 +326,24 @@ def localized_azimuth(code):
     azimuth = a_data[code][get_locale()]
 
     return azimuth
+
+
+@app.template_filter("feelslike_emoji")
+def feelslike_emoji(day_average):
+    """Display emoji depending on the average day temperature"""
+    emoji = ["🥶", "😨", "🙂", "😊", "🥵"]
+
+    if day_average <= MIN_TEMP_ACCEPTABLE:
+        return emoji[0]
+
+    if day_average > MAX_TEMP_ACCEPTABLE:
+        return emoji[-1]
+    
+    temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
+    d = temps_range / (len(emoji) + 1)
+    emojo = emoji[math.floor(abs(day_average) / d)]
+
+    return emojo
 
 
 # -------------

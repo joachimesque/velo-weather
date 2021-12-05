@@ -122,7 +122,7 @@
                     ☔️ {{ _('Precipitation in millimeters per hour.') }}
                     {{ _('Vertical scale from 0 to %(max_rain)s<abbr title=\'millimeters\'>mm</abbr>.', max_rain=max_rain) }}</li>
                 <li>🌡 {{ _('Temperature in degree Celcius. Scale from 0<abbr title=\'degrees Celcius\'>°C</abbr> (blue) to 12<abbr title=\'degrees Celcius\'>°C</abbr> (white) and from 19<abbr title=\'degrees Celcius\'>°C</abbr> to 35<abbr title=\'degrees Celcius\'>°C</abbr> (orange).') }}</li>
-                <li>🥶 {{ _('Apparent temperature, in degree Celcius. Same scale as temperature.') }}</li>
+                <li>🥶/😨/🙂/😊/🥵 {{ _('Apparent temperature, in degree Celcius. Same scale as temperature.') }}</li>
             </ul>
         </details>
 
@@ -209,7 +209,9 @@
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th title="{{ _('Feels like') }}">🥶</th>
+                        <th title="{{ _('Feels like') }}">
+                            {{ forecast.day.avgtemp_c|feelslike_emoji }}
+                        </th>
                         {% for hour in forecast.hour|valid_hour %}
                         <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.feelslike_c|gradient_temp(13, 19) }}; --bg-height: 100%;">
                             <span class="value">{{ hour.feelslike_c }}{{_('°C')}}</span>
