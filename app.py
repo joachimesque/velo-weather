@@ -14,21 +14,30 @@ from flask_babel import Babel, format_date, _
 
 from flask_assets import Environment, Bundle
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__, static_url_path="")
 assets = Environment(app)
 
-js = Bundle('scripts/active_hour_scroll.js', 'scripts/location_autocomplete.js',
-            filters='jsmin', output='gen/packed.js')
-css = Bundle('styles/chota.min.css', 'styles/velo-weather.css', 'fonts/plex.css',
-            filters='cssmin', output='gen/packed.css')
-assets.register('js_all', js)
-assets.register('css_all', css)
+js = Bundle(
+    "scripts/active_hour_scroll.js",
+    "scripts/location_autocomplete.js",
+    filters="jsmin",
+    output="gen/packed.js",
+)
+css = Bundle(
+    "styles/chota.min.css",
+    "styles/velo-weather.css",
+    "fonts/plex.css",
+    filters="cssmin",
+    output="gen/packed.css",
+)
+assets.register("js_all", js)
+assets.register("css_all", css)
 
 
-app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
-app.config['LANGUAGES'] = {'en': 'English', 'fr': 'Français'}
+app.config["BABEL_TRANSLATION_DIRECTORIES"] = "translations"
+app.config["LANGUAGES"] = {"en": "English", "fr": "Français"}
 
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.getenv("SECRET_KEY")
 
 babel = Babel(app)
 
@@ -59,13 +68,14 @@ MAX_HOUR = 20
 # PAGE RENDER
 # -----------
 
+
 @app.route("/")
 def index():
     data = None
     q = request.args.get("location", None)
 
     if q:
-        session['location'] = q
+        session["location"] = q
     else:
         if session.get("location", None):
             q = session.get("location")
@@ -73,21 +83,26 @@ def index():
             q = "Montreuil, France"
 
     api_key = os.getenv("WEATHER_API_KEY")
-    r = requests.get(f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=yes&alerts=no")
+    r = requests.get(
+        f"https://api.weatherapi.com/v1/forecast.json?key={api_key}&q={q}&days=10&aqi=yes&alerts=no"
+    )
     # probably location unknow
     if r.status_code != 400:
         r.raise_for_status()
         data = r.json()
-    return render_template("index.html",
-                            data=data,
-                            max_rain=MAX_RAIN_ACCEPTABLE,
-                            max_wind=MAX_WIND_ACCEPTABLE,
-                            languages=app.config['LANGUAGES'])
+    return render_template(
+        "index.html",
+        data=data,
+        max_rain=MAX_RAIN_ACCEPTABLE,
+        max_wind=MAX_WIND_ACCEPTABLE,
+        languages=app.config["LANGUAGES"],
+    )
 
 
 # ----------------
 # TEMPLATE FILTERS
 # ----------------
+
 
 @app.template_filter("valid_day")
 def valid_day(value, timezone="Europe/Paris"):
@@ -109,7 +124,7 @@ def valid_hour(value):
     """Only return valid hour objects"""
     if value:
         for item in value:
-            hour = int(item["time"].split(' ')[-1].split(':')[0])
+            hour = int(item["time"].split(" ")[-1].split(":")[0])
             if hour <= MAX_HOUR and hour >= MIN_HOUR:
                 yield item
 
@@ -130,7 +145,7 @@ def get_classes(hour, timezone):
 
 
 @app.template_filter("gradient")
-def gradient(value, max, start=(0, .8, 1), end=(0,.8,.5)):
+def gradient(value, max, start=(0, 0.8, 1), end=(0, 0.8, 0.5)):
     """With a value from 0 to max, generate the correct gradient"""
     value = int(value)
     c1 = Color(hsl=start)
@@ -147,10 +162,10 @@ def air_quality_index(air_quality):
     Based on http://www.atmo-alsace.net/site/Explications-sur-le-calcul-des-indices-22.html
     """
     scales = {
-        'pm10': [0, 10, 20, 30, 40, 50, 65, 80, 100, 125],
-        'so2': [0, 40, 80, 120, 160, 200, 250, 300, 400, 500],
-        'no2': [0, 30, 55, 85, 110, 135, 165, 200, 275, 400],
-        'o3': [0, 30, 55, 80, 105, 130, 150, 180, 210, 240],
+        "pm10": [0, 10, 20, 30, 40, 50, 65, 80, 100, 125],
+        "so2": [0, 40, 80, 120, 160, 200, 250, 300, 400, 500],
+        "no2": [0, 30, 55, 85, 110, 135, 165, 200, 275, 400],
+        "o3": [0, 30, 55, 80, 105, 130, 150, 180, 210, 240],
     }
 
     aq_indexes = []
@@ -164,17 +179,17 @@ def air_quality_index(air_quality):
 @app.template_filter("air_quality_translation")
 def air_quality_translation(air_quality):
     terms = [
-        _('No data'),
-        _('Very good'),
-        _('Very good'),
-        _('Good'),
-        _('Good'),
-        _('Average'),
-        _('Below average'),
-        _('Below average'),
-        _('Bad'),
-        _('Bad'),
-        _('Very bad'),
+        _("No data"),
+        _("Very good"),
+        _("Very good"),
+        _("Good"),
+        _("Good"),
+        _("Average"),
+        _("Below average"),
+        _("Below average"),
+        _("Bad"),
+        _("Bad"),
+        _("Very bad"),
     ]
     index = air_quality_index(air_quality)
     return terms[index]
@@ -184,13 +199,17 @@ def air_quality_translation(air_quality):
 def air_quality_gradient(air_quality):
     index = air_quality_index(air_quality)
 
-    return gradient(index, 10, start=(.4,.8,.5)) if index > 0 else '#fff'
+    return gradient(index, 10, start=(0.4, 0.8, 0.5)) if index > 0 else "#fff"
 
 
 @app.template_filter("wind_repeat")
 def wind_repeat(speed_kph, character):
     """Repeats a character depending on the force of the wind"""
-    return "".join(repeat(character, (round(speed_kph / 10)) if speed_kph < MAX_WIND_ACCEPTABLE else 4))
+    return "".join(
+        repeat(
+            character, (round(speed_kph / 10)) if speed_kph < MAX_WIND_ACCEPTABLE else 4
+        )
+    )
 
 
 @app.template_filter("precip_percent")
@@ -205,8 +224,8 @@ def precip_percent(precip_mm):
 def precip_gradient(precip_mm):
     """Handle gradient for precip_mm"""
     if precip_mm >= PRECIP_ALERT:
-        return '#000'
-    
+        return "#000"
+
     return "hsl(210, 80%, 50%)"
 
 
@@ -241,8 +260,8 @@ def day(value, format="%A %d %b"):
     if value is None:
         return ""
     d = date.fromisoformat(value)
-    
-    localized_format = _('EEEE, MMMM d')
+
+    localized_format = _("EEEE, MMMM d")
 
     return format_date(date=d, format=localized_format)
 
@@ -289,8 +308,8 @@ def proba_gradient(hour):
     max_val = 30
     probability = min(proba_value(hour), max_val)
 
-    start_color = (.4,.8,.5)
-    end_color = (0,.8,.6)
+    start_color = (0.4, 0.8, 0.5)
+    end_color = (0, 0.8, 0.6)
 
     return gradient(probability, max=max_val, start=start_color, end=end_color)
 
@@ -298,19 +317,19 @@ def proba_gradient(hour):
 @app.template_filter("localized_condition")
 def localized_condition(code):
     """Translate weather condition from code"""
-    
+
     # conditions list from https://www.weatherapi.com/docs/#weather-icons
-    c_file = open('translations/conditions.json')
+    c_file = open("translations/conditions.json")
     c_data = json.loads(c_file.read())
 
-    condition = next((item for item in c_data if item['code'] == code), None)
+    condition = next((item for item in c_data if item["code"] == code), None)
 
-    for lang in condition['languages']:
-        if lang['lang_iso'] == get_locale():
-            localized_condition_text = lang['day_text']
+    for lang in condition["languages"]:
+        if lang["lang_iso"] == get_locale():
+            localized_condition_text = lang["day_text"]
             break
     else:
-        localized_condition_text = condition['day']
+        localized_condition_text = condition["day"]
 
     return localized_condition_text
 
@@ -318,9 +337,9 @@ def localized_condition(code):
 @app.template_filter("localized_azimuth")
 def localized_azimuth(code):
     """Translate azimuth from code"""
-    
+
     # conditions list from https://www.weatherapi.com/docs/#weather-icons
-    a_file = open('translations/azimuths.json')
+    a_file = open("translations/azimuths.json")
     a_data = json.loads(a_file.read())
 
     azimuth = a_data[code][get_locale()]
@@ -338,7 +357,7 @@ def feelslike_emoji(day_average):
 
     if day_average > MAX_TEMP_ACCEPTABLE:
         return emoji[-1]
-    
+
     temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
     d = temps_range / (len(emoji) + 1)
     emojo = emoji[math.floor(abs(day_average) / d)]
@@ -350,16 +369,20 @@ def feelslike_emoji(day_average):
 # TEMPLATE TAGS
 # -------------
 
+
 @babel.localeselector
 def get_locale():
-    if request.args.get('lang'):
-        session['lang'] = request.args.get('lang')
+    if request.args.get("lang"):
+        session["lang"] = request.args.get("lang")
     else:
-        if not 'lang' in session:
-            session['lang'] = request.accept_languages.best_match(app.config['LANGUAGES'].keys())
-    return session.get('lang', 'en')
+        if not "lang" in session:
+            session["lang"] = request.accept_languages.best_match(
+                app.config["LANGUAGES"].keys()
+            )
+    return session.get("lang", "en")
 
-app.jinja_env.globals['get_locale'] = get_locale
+
+app.jinja_env.globals["get_locale"] = get_locale
 
 
 def asset_url(asset_path):
@@ -368,7 +391,7 @@ def asset_url(asset_path):
     domain = request.host_url
     domain = domain[:-1] if domain[:-1] == "/" else domain
 
-    return "%s%s" % (domain, url_for('static', filename=asset_path))
+    return "%s%s" % (domain, url_for("static", filename=asset_path))
 
-app.jinja_env.globals['asset_url'] = asset_url
 
+app.jinja_env.globals["asset_url"] = asset_url
