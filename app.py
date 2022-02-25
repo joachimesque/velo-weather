@@ -32,9 +32,9 @@ js = Bundle(
     output="gen/packed.js",
 )
 css = Bundle(
+    "fonts/plex.css",
     "styles/chota.min.css",
     "styles/velo-weather.css",
-    "fonts/plex.css",
     filters="cssmin",
     output="gen/packed.css",
 )

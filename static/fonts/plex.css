@@ -4,8 +4,8 @@
   font-weight: 400;
   src: local("IBM Plex Mono"),
        local("IBMPlexMono"),
-       url("plex/IBMPlexMono-Regular.woff2") format("woff2"),
-       url("plex/IBMPlexMono-Regular.woff") format("woff");
+       url("/fonts/plex/IBMPlexMono-Regular.woff2") format("woff2"),
+       url("/fonts/plex/IBMPlexMono-Regular.woff") format("woff");
 }
 @font-face {
   font-family: 'IBM Plex Sans Condensed';
@@ -13,8 +13,8 @@
   font-weight: 400;
   src: local("IBM Plex Sans Cond"),
        local("IBMPlexSansCond-Regular"),
-       url("plex/IBMPlexSansCondensed-Regular.woff2") format("woff2"),
-       url("plex/IBMPlexSansCondensed-Regular.woff") format("woff");
+       url("/fonts/plex/IBMPlexSansCondensed-Regular.woff2") format("woff2"),
+       url("/fonts/plex/IBMPlexSansCondensed-Regular.woff") format("woff");
 }
 @font-face {
   font-family: 'IBM Plex Sans Condensed';
@@ -22,6 +22,6 @@
   font-weight: 700;
   src: local("IBM Plex Sans Cond Bold"),
        local("IBMPlexSansCond-Bold"),
-       url("plex/IBMPlexSansCondensed-Bold.woff2") format("woff2"),
-       url("plex/IBMPlexSansCondensed-Bold.woff") format("woff");
+       url("/fonts/plex/IBMPlexSansCondensed-Bold.woff2") format("woff2"),
+       url("/fonts/plex/IBMPlexSansCondensed-Bold.woff") format("woff");
 }
