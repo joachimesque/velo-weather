@@ -28,7 +28,12 @@
         <meta property="og:image:height" content="600"/>
     </head>
     <body>
-        <div class="container">
+        <main class="container">
+            <div class="loading-container" aria-hidden="true">
+                <div class="loading-progress"></div>
+                <span>{{ _('Loading…') }}</span>
+            </div>
+
             {% set location = data.location.name + ", " + data.location.country if data else _('No data found') %}
             <header>
                 <div class="row flex-align-items-center">
@@ -289,7 +294,7 @@
                     <a href="https://www.weatherapi.com">WeatherAPI</a>
                 </div>
             </footer>
-        </div>
+        </main>
 
         {% assets "js_all" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>

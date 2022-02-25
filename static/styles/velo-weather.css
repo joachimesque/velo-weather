@@ -154,6 +154,51 @@ span.current_weather_icon img {
     white-space: nowrap;
 }
 
+/* LOADER */
+main {
+  transform: translateY(-100px);
+  transition: 0.3s 0.1s ease-in-out;
+}
+
+main.is-loading {
+    transform: translateY(0px);
+}
+
+.loading-container {
+  min-height: 100px;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:  10px;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+
+main.is-loading .loading-container {
+    opacity: 1;
+}
+
+.loading-container .loading-progress {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 6px solid transparent;
+  border-top-color: var(--color-primary);
+  border-right-color: var(--color-primary);
+  animation: loading-progress 0.5s infinite forwards;
+}
+
+@keyframes loading-progress {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media(min-width: 768px) {
     /* CURRENT WEATHER */
     .current_weather {

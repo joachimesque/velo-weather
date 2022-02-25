@@ -1,14 +1,14 @@
 # Translations template for PROJECT.
-# Copyright (C) 2021 ORGANIZATION
+# Copyright (C) 2022 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-05 17:52+0100\n"
+"POT-Creation-Date: 2022-02-25 19:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: app.py:256
+#: app.py:264
 msgid "No data"
 msgstr ""
 
-#: app.py:257 app.py:258
+#: app.py:265 app.py:266
 msgid "Very good"
 msgstr ""
 
-#: app.py:259 app.py:260
+#: app.py:267 app.py:268
 msgid "Good"
 msgstr ""
 
-#: app.py:261
+#: app.py:269
 msgid "Average"
 msgstr ""
 
-#: app.py:262 app.py:263
+#: app.py:270 app.py:271
 msgid "Below average"
 msgstr ""
 
-#: app.py:264 app.py:265
+#: app.py:272 app.py:273
 msgid "Bad"
 msgstr ""
 
-#: app.py:266
+#: app.py:274
 msgid "Very bad"
 msgstr ""
 
-#: app.py:347
+#: app.py:355
 msgid "EEEE, MMMM d"
 msgstr ""
 
@@ -53,87 +53,91 @@ msgstr ""
 msgid "A basic weather forecast tool to help you plan your bike rides."
 msgstr ""
 
-#: templates/index.html:32
+#: templates/index.html:34
+msgid "Loading…"
+msgstr ""
+
+#: templates/index.html:37
 msgid "No data found"
 msgstr ""
 
-#: templates/index.html:42
+#: templates/index.html:47
 msgid "Location"
 msgstr ""
 
-#: templates/index.html:44 templates/index.html:284
+#: templates/index.html:49 templates/index.html:289
 msgid "Go!"
 msgstr ""
 
-#: templates/index.html:51
+#: templates/index.html:56
 msgid "No data found. Wrong location?"
 msgstr ""
 
-#: templates/index.html:55
+#: templates/index.html:60
 msgid "Now"
 msgstr ""
 
-#: templates/index.html:59 templates/index.html:106 templates/index.html:241
-#: templates/index.html:251
+#: templates/index.html:64 templates/index.html:111 templates/index.html:246
+#: templates/index.html:256
 msgid "°C"
 msgstr ""
 
-#: templates/index.html:65
+#: templates/index.html:70
 msgid "Updated"
 msgstr ""
 
-#: templates/index.html:69
+#: templates/index.html:74
 msgid "Air quality"
 msgstr ""
 
-#: templates/index.html:76
+#: templates/index.html:81
 msgid "Wind speed"
 msgstr ""
 
-#: templates/index.html:79 templates/index.html:86 templates/index.html:209
+#: templates/index.html:84 templates/index.html:91 templates/index.html:214
 msgid "kph"
 msgstr ""
 
-#: templates/index.html:83
+#: templates/index.html:88
 msgid "Wind gust"
 msgstr ""
 
-#: templates/index.html:90 templates/index.html:215
+#: templates/index.html:95 templates/index.html:220
 msgid "Wind direction"
 msgstr ""
 
-#: templates/index.html:101
+#: templates/index.html:106
 msgid "Precipitation"
 msgstr ""
 
-#: templates/index.html:102 templates/index.html:233
+#: templates/index.html:107 templates/index.html:238
 msgid "mm"
 msgstr ""
 
-#: templates/index.html:105 templates/index.html:246
+#: templates/index.html:110 templates/index.html:251
 msgid "Feels like"
 msgstr ""
 
-#: templates/index.html:112
+#: templates/index.html:117
 msgid "Legend"
 msgstr ""
 
-#: templates/index.html:115
+#: templates/index.html:120
 msgid ""
 "A ride opportunity indicator, based on rain, wind, day/night, extreme "
 "temps and risk of ice. The higher the number, the worse the conditions "
 "and the more dangerous the ride."
 msgstr ""
 
-#: templates/index.html:116
+#: templates/index.html:121
 msgid "See source code <code>def proba_value(hour):</code> for details."
 msgstr ""
 
-#: templates/index.html:117
+#: templates/index.html:122
 msgid "Linear gradient from 0 (green) to 40 (red)."
 msgstr ""
 
-#: templates/index.html:119
+#: templates/index.html:124
 #, python-format
 msgid ""
 "Wind speed in kilometers per hour, shown with the repetiton of the emoji "
@@ -142,20 +146,20 @@ msgid ""
 "very strong winds."
 msgstr ""
 
-#: templates/index.html:120
+#: templates/index.html:125
 msgid "Wind directions, in degrees."
 msgstr ""
 
-#: templates/index.html:122
+#: templates/index.html:127
 msgid "Precipitation in millimeters per hour."
 msgstr ""
 
-#: templates/index.html:123
+#: templates/index.html:128
 #, python-format
 msgid "Vertical scale from 0 to %(max_rain)s<abbr title='millimeters'>mm</abbr>."
 msgstr ""
 
-#: templates/index.html:124
+#: templates/index.html:129
 #, python-format
 msgid ""
 "Temperature in degree Celcius. Scale from %(extreme_min)s<abbr "
@@ -165,19 +169,19 @@ msgid ""
 "Celcius'>°C</abbr> (orange)."
 msgstr ""
 
-#: templates/index.html:125
+#: templates/index.html:130
 msgid "Apparent temperature, in degree Celcius. Same scale as temperature."
 msgstr ""
 
-#: templates/index.html:132
+#: templates/index.html:137
 msgid "Settings"
 msgstr ""
 
-#: templates/index.html:135
+#: templates/index.html:140
 msgid "Saved!"
 msgstr ""
 
-#: templates/index.html:143
+#: templates/index.html:148
 #, python-format
 msgid ""
 "The ideal temperature range is based on last weeks weather, from "
@@ -185,7 +189,7 @@ msgid ""
 "%(ideal_max)s<abbr title='degrees Celcius'>°C</abbr>"
 msgstr ""
 
-#: templates/index.html:145
+#: templates/index.html:150
 #, python-format
 msgid ""
 "The ideal temperature range is the default setting, from "
@@ -193,7 +197,7 @@ msgid ""
 "%(ideal_max)s<abbr title='degrees Celcius'>°C</abbr>"
 msgstr ""
 
-#: templates/index.html:151
+#: templates/index.html:156
 #, python-format
 msgid ""
 "Use the default ideal temperature range between %(ideal_min)s<abbr "
@@ -201,61 +205,61 @@ msgid ""
 "Celcius'>°C</abbr>"
 msgstr ""
 
-#: templates/index.html:153
+#: templates/index.html:158
 msgid "Base the ideal temperature range on last week’s weather"
 msgstr ""
 
-#: templates/index.html:192
+#: templates/index.html:197
 msgid "Very complicated opportunity indicator"
 msgstr ""
 
-#: templates/index.html:202
+#: templates/index.html:207
 msgid "Wind speed (kph)"
 msgstr ""
 
-#: templates/index.html:230
+#: templates/index.html:235
 msgid "Precipitation (mm)"
 msgstr ""
 
-#: templates/index.html:232
+#: templates/index.html:237
 #, python-format
 msgid ""
 "Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is "
 "%(precip_mm)s millimeters."
 msgstr ""
 
-#: templates/index.html:232
+#: templates/index.html:237
 msgid "&percnt;"
 msgstr ""
 
-#: templates/index.html:238
+#: templates/index.html:243
 msgid "Temperature"
 msgstr ""
 
-#: templates/index.html:263
+#: templates/index.html:268
 msgid "Based on an idea and code by abulte:"
 msgstr ""
 
-#: templates/index.html:264
+#: templates/index.html:269
 msgid "Support them with a pizza"
 msgstr ""
 
-#: templates/index.html:266
+#: templates/index.html:271
 msgid "Fork by joachimesque:"
 msgstr ""
 
-#: templates/index.html:267
+#: templates/index.html:272
 msgid "made in Montreuil 🍑 with pride"
 msgstr ""
 
-#: templates/index.html:269
+#: templates/index.html:274
 msgid "Logo made from Noto Emoji font:"
 msgstr ""
 
-#: templates/index.html:276
+#: templates/index.html:281
 msgid "Language"
 msgstr ""
 
-#: templates/index.html:288
+#: templates/index.html:293
 msgid "Weather data:"
 msgstr ""
