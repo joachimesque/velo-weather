@@ -11,7 +11,7 @@ a[href] {
     text-decoration: underline;
 }
 a.header_logo {
-    padding: 1rem 0;
+    padding: 2rem 0 1rem;
     display: flex;
     gap: 1rem;
     align-items: center;
@@ -164,7 +164,7 @@ main.is-loading {
     transform: translateY(0px);
 }
 
-.loading-container {
+.loader {
   min-height: 100px;
   padding: 10px 0;
   display: flex;
@@ -176,27 +176,8 @@ main.is-loading {
   transition: opacity .2s ease-in-out;
 }
 
-main.is-loading .loading-container {
+main.is-loading .loader {
     opacity: 1;
-}
-
-.loading-container .loading-progress {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 6px solid transparent;
-  border-top-color: var(--color-primary);
-  border-right-color: var(--color-primary);
-  animation: loading-progress 0.5s infinite forwards;
-}
-
-@keyframes loading-progress {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 @media(min-width: 768px) {
