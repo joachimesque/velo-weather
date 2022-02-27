@@ -6,7 +6,10 @@ const main = document.querySelector("main");
 
 function loading() {
     main.classList.add('is-loading');
-    window.location.reload();
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
 }
 
 function swipeStart(e) {
