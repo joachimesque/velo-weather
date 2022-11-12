@@ -7,9 +7,28 @@
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
+main {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh + 100px);
+}
+main > header, main > footer {
+    flex: 0 0 auto;
+}
+main > section {
+    flex: 1 0 auto;
+}
 a[href] {
     text-decoration: underline;
 }
+
+#location-reset {
+  margin-left: calc(-16px - 36px);
+  margin-block: 1px;
+  background-color: white;
+  border: 1px solid transparent;
+}
+
 a.header_logo {
     padding: 2rem 0 1rem;
     display: flex;

@@ -2,9 +2,17 @@
 
 **Bike ride opportunity, according to rain and wind forecasts where you are.**
 
-This uses https://www.weatherapi.com/ for weather forecast, you'll need to set `WEATHER_API_KEY` env var to build your own instance.
+This uses https://www.open-meteo.com/ for weather forecast and geocoding API.
 
-Apart from that, it's just a standard Flask app :-). It can be deployed on Dokku and Heroku.
+## Run
+
+It's just a standard Flask app :-). It can be deployed on Dokku and Heroku.
+
+```fish
+$ source venv/bin/activate.fish
+$ SECRET_KEY=set_me_up gunicorn app:app --reload
+```
+
 
 ## Translations
 

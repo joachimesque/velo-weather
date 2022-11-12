@@ -12,7 +12,7 @@
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset_url('apple-touch-icon.png') }}">
         <link rel="manifest" href="{{ asset_url('site.webmanifest') }}">
         {% if data %}
-            <link rel="icon" type="image/png" href="{{ data.current.condition.icon }}">
+            <link rel="icon" type="image/png" href="{{ asset_url(current_weather.condition_icon) }}">
         {% else %}
             <link rel="icon" type="image/png" sizes="32x32" href="{{ asset_url('favicon-32x32.png') }}">
             <link rel="icon" type="image/png" sizes="16x16" href="{{ asset_url('favicon-16x16.png') }}">
@@ -34,7 +34,6 @@
                 <span>{{ _('Loading…') }}</span>
             </div>
 
-            {% set location = data.location.name + ", " + data.location.country if data else _('No data found') %}
             <header>
                 <div class="row flex-align-items-center">
                     <a class="col header_logo" href="/">
@@ -42,73 +41,82 @@
                         <h1>Velo Weather</h1>
                     </a>
                     <div class="col form">
-                        <form method="GET" action="/" id="location-form">
+                        <form method="POST" action="/" id="location-form">
                             <div class="grouped">
                                 <input list="locations-list" type="text" name="location" id="location-input" autocomplete="off" value="{{ location }}" aria-label="{{ _('Location') }}">
+                                <button class="button icon-only clear" aria-label="{{ _('Reset input') }}" type="button" id="location-reset">
+                                    <span aria-hidden="">✕</span>
+                                </button>
                                 <datalist id="locations-list"></datalist>
-                                <button type="submit">{{ _('Go!') }}</button>
+                                <input type="hidden" name="latitude" />
+                                <input type="hidden" name="longitude" />
+                                <button type="submit" disabled>
+                                    {{ _('Go!') }}
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </header>
+
             {% if not data %}
-                🤕 {{ _('No data found. Wrong location?') }}
+                <section>🤕 {{ _('No data found. Wrong location?') }}</section>
             {% else %}
                 <section class="card current_weather">
                     <h2 class="current_weather_title">
                         <span>{{ _('Now') }}</span>
 
                         <span class="current_weather_icon">
-                            <img src="{{ data.current.condition.icon }}" alt="{{ data.current.condition.code|localized_condition }}">
-                            {{ data.current.temp_c }}{{_('°C')}}
+                            <img src="{{ asset_url(current_weather.condition_icon) }}" alt="{{ current_weather.condition_text }}">
+                            {{ current_weather.temperature_2m }}{{_('°C')}}
                         </span>
                     </h2>
 
                     <dl class="current_weather_summary">
-                        <div>
+{#                        <div>
                             <dt>{{ _('Updated') }}</dt>
-                            <dd>{{ data.current.last_updated }}</dd>
-                        </div>
+                            <dd>{{ current_weather.time }}</dd>
+                        </div>#}
+
                         <div>
                             <dt>{{ _('Air quality') }}</dt>
                             <dd>
-                                <span aria-hidden="" style="color: {{ data.current.air_quality|air_quality_gradient }}">●</span>
-                                {{ data.current.air_quality|air_quality_translation }}
+                                <span aria-hidden="" style="color: {{ current_weather.air_quality_gradient }}">●</span>
+                                {{ current_weather.air_quality_translation }}
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Wind speed') }}</dt>
                             <dd>
-                                {{ data.current.wind_kph|wind_repeat('💨') }}
-                                {{ data.current.wind_kph }}{{ _('kph') }}
+                                {{ current_weather.windspeed_10m|wind_repeat('💨') }}
+                                {{ current_weather.windspeed_10m }}{{ _('kph') }}
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Wind gust') }}</dt>
                             <dd>
-                                {{ data.current.gust_kph|wind_repeat('💨') }}
-                                {{ data.current.gust_kph }}{{ _('kph') }}
+                                {{ current_weather.windgusts_10m|wind_repeat('💨') }}
+                                {{ current_weather.windgusts_10m }}{{ _('kph') }}
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Wind direction') }}</dt>
                             <dd>
-                                <span aria-hidden class="is-inline-block" style="transform: rotate({{ data.current.wind_degree }}deg);">↓</span>
+                                <span aria-hidden class="is-inline-block" style="transform: rotate({{ current_weather.winddirection_10m }}deg);">↓</span>
                                 <small>
-                                    <abbr title="{{ data.current.wind_dir|localized_azimuth|last }}">
-                                        {{ data.current.wind_dir|localized_azimuth|first }}
+                                    <abbr title="{{ current_weather.winddirection_10m|localized_azimuth|last }}">
+                                        {{ current_weather.winddirection_10m|localized_azimuth|first }}
                                     </abbr>
                                 </small>
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Precipitation') }}</dt>
-                            <dd>{{ data.current.precip_mm }}{{ _('mm') }}</dd>
+                            <dd>{{ current_weather.precipitation }}{{ _('mm') }}</dd>
                         </div>
                         <div>
                             <dt>{{ _('Feels like') }}</dt>
-                            <dd>{{ data.current.feelslike_c }}{{_('°C')}}</dd>
+                            <dd>{{ current_weather.apparent_temperature }}{{_('°C')}}</dd>
                         </div>
                     </dl>
                 </section>
@@ -151,7 +159,7 @@
                                 {% endif %}
                                 <br />
                                 {% with value = 0 if use_relative_temps else 1 %}
-                                    <a href="?use_relative_temps={{ value }}#settings">
+                                    <a href="?use_relative_temps={{ value }}">
                                     {% if use_relative_temps %}
                                         {{ _('Use the default ideal temperature range between %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> and %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=default_ideal_temps[0], ideal_max=default_ideal_temps[1]) }}
                                     {% else %}
@@ -165,21 +173,21 @@
                     </details>
                 {% endwith %}
 
-                {% set forecasts = data.forecast.forecastday %}
-                {% for forecast in forecasts|valid_day(data.location.tz_id) %}
+                {% set forecasts = data %}
+                {% for forecast in forecasts %}
                     <section>
                         <h2 class="forecast_day">
-                            <img src="{{ forecast.day.condition.icon }}" alt="{{ forecast.day.condition.code|localized_condition }}">
-                            {{ forecast.date|day }}
+                            <img src="{{ asset_url(forecast.condition_icon) }}" title="{{ forecast.condition_text }}" alt="{{ forecast.condition_text }}">
+                            {{ forecast.date }}
                         </h2>
                         <div class="table-container">
                             <table tabindex="-1">
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <th class="{{ hour|get_classes(data.location.tz_id) }}">
-                                                {{ hour.time.split(' ')[-1].split(':')[0] }}
+                                        {% for hour in forecast.hour %}
+                                            <th class="{{ hour|get_classes(timezone) }}">
+                                                {{ hour.hour }}
                                             </th>
                                         {% endfor %}
                                     </tr>
@@ -187,16 +195,19 @@
                                 <tbody>
                                     <tr>
                                         <th title="Forecast icon"></th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="{{ hour|get_classes(data.location.tz_id) }}">
-                                                <img style="max-width: 25px;" src="{{ hour.condition.icon }}" alt="{{ hour.condition.code|localized_condition }}">
+                                        {% for hour in forecast.hour %}
+                                            <td class="{{ hour|get_classes(timezone) }}">
+                                                <img style="max-width: 25px;" src="{{ asset_url(hour.condition_icon) }}" alt="{{ hour.condition_text }}" title="{{ hour.condition_text }}">
+                                                {% if "air_quality_index" in hour %}
+                                                    <span title="{{ _('Air quality') }}: {{ hour.air_quality_translation }} ({{10 - hour.air_quality_index}}/10)" style="color: {{ hour.air_quality_gradient }}">●</span>
+                                                {% endif %}
                                             </td>
                                         {% endfor %}
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Very complicated opportunity indicator') }}">🎲</th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour|proba_gradient }}; --bg-height: 100%;">
+                                        {% for hour in forecast.hour %}
+                                            <td class="cell_custom {{ hour|get_classes(timezone) }}" style="--bg-color: {{ hour|proba_gradient }}; --bg-height: 100%;">
                                                 <strong class="invisible_value value">
                                                     {{ hour|proba_value }}
                                                 </strong>
@@ -205,26 +216,26 @@
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Wind speed (kph)') }}">💨</th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="{{ hour|get_classes(data.location.tz_id) }}">
+                                        {% for hour in forecast.hour %}
+                                            <td class="{{ hour|get_classes(timezone) }}">
                                                 <span class="value">
                                                     <span class="one_line">
-                                                        {{ hour.wind_kph|wind_repeat('💨') }}
+                                                        {{ hour.windspeed_10m|wind_repeat('💨') }}
                                                     </span>
-                                                    <small>{{ hour.wind_kph }}{{ _('kph') }}</small>
+                                                    <small>{{ hour.windspeed_10m }}{{ _('kph') }}</small>
                                                 </span>
                                             </td>
                                         {% endfor %}
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Wind direction') }}">🧭</th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="{{ hour|get_classes(data.location.tz_id) }}">
+                                        {% for hour in forecast.hour %}
+                                            <td class="{{ hour|get_classes(timezone) }}">
                                                 <span class="value">
-                                                    <span aria-hidden class="is-inline-block" style="transform: rotate({{ hour.wind_degree }}deg);">↓</span>
+                                                    <span aria-hidden class="is-inline-block" style="transform: rotate({{ hour.winddirection_10m }}deg);">↓</span>
                                                     <small>
-                                                        <abbr title="{{ hour.wind_dir|localized_azimuth|last }}">
-                                                            {{ hour.wind_dir|localized_azimuth|first }}
+                                                        <abbr title="{{ hour.winddirection_10m|localized_azimuth|last }}">
+                                                            {{ hour.winddirection_10m|localized_azimuth|first }}
                                                         </abbr>
                                                     </small>
                                                 </span>
@@ -233,27 +244,27 @@
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Precipitation (mm)') }}">☔️</th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.precip_mm|precip_gradient }}; --bg-height: {{ hour.precip_mm|precip_percent }}%;" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precip_mm)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precip_mm=hour.precip_mm ) }}">
-                                                <span class="value"><small>{{ hour.precip_mm }}{{_("mm")}}</small></span>
+                                        {% for hour in forecast.hour %}
+                                            <td class="cell_custom {{ hour|get_classes(timezone) }}" style="--bg-color: {{ hour.precipitation|precip_gradient }}; --bg-height: {{ hour.precipitation|precip_percent }}%;" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precipitation)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precipitation=hour.precipitation ) }}">
+                                                <span class="value"><small>{{ hour.precipitation }}{{_("mm")}}</small></span>
                                             </td>
                                         {% endfor %}
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Temperature') }}">🌡</th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.temp_c|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
-                                                <span class="value">{{ hour.temp_c }}{{_('°C')}}</span>
+                                        {% for hour in forecast.hour %}
+                                            <td class="cell_custom {{ hour|get_classes(timezone) }}" style="--bg-color: {{ hour.temperature_2m|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
+                                                <span class="value">{{ hour.temperature_2m }}{{_('°C')}}</span>
                                             </td>
                                         {% endfor %}
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Feels like') }}">
-                                            {{ forecast.day.avgtemp_c|feelslike_emoji }}
+                                            {{ forecast|feelslike_emoji }}
                                         </th>
-                                        {% for hour in forecast.hour|valid_hour %}
-                                            <td class="cell_custom {{ hour|get_classes(data.location.tz_id) }}" style="--bg-color: {{ hour.feelslike_c|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
-                                                <span class="value">{{ hour.feelslike_c }}{{_('°C')}}</span>
+                                        {% for hour in forecast.hour %}
+                                            <td class="cell_custom {{ hour|get_classes(timezone) }}" style="--bg-color: {{ hour.apparent_temperature|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
+                                                <span class="value">{{ hour.apparent_temperature }}{{_('°C')}}</span>
                                             </td>
                                         {% endfor %}
                                     </tr>
@@ -262,7 +273,9 @@
                         </div>
                     </section>
                 {% endfor %}
+
             {% endif %}
+
             <footer class="row flex-align-items-center">
                 <div class="col-9-lg">
                     {{ _('Based on an idea and code by abulte:') }} <a href="https://github.com/abulte/velo-weather">Github:abulte/velo-weather</a>
@@ -291,7 +304,7 @@
                         </div>
                     </form>
                     {{ _('Weather data:') }}
-                    <a href="https://www.weatherapi.com">WeatherAPI</a>
+                    <a href="https://open-meteo.com">Open Meteo</a>
                 </div>
             </footer>
         </main>
