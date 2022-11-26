@@ -611,7 +611,7 @@ def localized_azimuth(angle):
     a_file = open("translations/azimuths.json")
     a_data = json.loads(a_file.read())
 
-    azimuth = a_data[code][get_locale()]
+    azimuth = a_data[code].get(get_locale(), code)
 
     return azimuth
 
