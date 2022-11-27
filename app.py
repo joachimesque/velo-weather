@@ -309,7 +309,8 @@ def serialize_data(weather_data, air_quality_data):
 
                 serialized_day["hour"].append(serialized_hour)
 
-        serialized.append(serialized_day)
+        if now.hour <= MAX_HOUR or day_object != now.date():
+            serialized.append(serialized_day)
 
     return (serialized, current_weather)
 
