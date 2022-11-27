@@ -185,11 +185,20 @@ def location():
     """location query endpoint"""
     search_term = request.args.get("search", None)
 
-    location_params = (("name", search_term), ("language", get_locale()))
+    location_params = (("name", search_term), ("language", get_locale()), ("count", 20))
 
     location_data = get_api_data("location", location_params)
 
-    return location_data
+    if not "results" in location_data:
+        return {}
+
+    return {
+        "results": sorted(
+            location_data["results"],
+            key=lambda d: d["population"] if "population" in d else 0,
+            reverse=True,
+        )
+    }
 
 
 # ----------------
