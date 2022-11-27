@@ -53,7 +53,7 @@ a[href] {
 
 #location-reset {
   margin-left: calc(-16px - 36px);
-  margin-block: 1px;
+  margin-block: 3px;
   background-color: white;
   border: 1px solid transparent;
 }
