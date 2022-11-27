@@ -237,6 +237,8 @@ def serialize_data(weather_data, air_quality_data):
         for day_prop in daily_properties:
             serialized_day[day_prop] = weather_data["daily"][day_prop][day_index]
 
+        serialized_day["feelslike_emoji"] = feelslike_emoji(serialized_day)
+
         try:
             sunrise_object = datetime.fromisoformat(
                 weather_data["daily"]["sunrise"][day_index]
@@ -257,6 +259,7 @@ def serialize_data(weather_data, air_quality_data):
 
         serialized_day["date"] = get_day(day_object)
         serialized_day["hour"] = []
+
         # Hour loop
         for (hour_index, hour) in enumerate(weather_data["hourly"]["time"]):
 
@@ -393,6 +396,27 @@ def get_consolidated_aqi_properties(air_quality):
         "air_quality_translation": air_quality_translation(index),
         "air_quality_gradient": air_quality_gradient(index),
     }
+
+
+def feelslike_emoji(day):
+    """Display emoji depending on the average day temperature"""
+    emoji = ["🥶", "😨", "🙂", "😊", "🥵"]
+
+    day_average = (
+        day["apparent_temperature_max"] + day["apparent_temperature_min"]
+    ) / 2
+    if day_average <= MIN_TEMP_ACCEPTABLE:
+        return emoji[0]
+
+    if day_average > MAX_TEMP_ACCEPTABLE:
+        return emoji[-1]
+
+    temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
+    d = temps_range / (len(emoji) + 1)
+
+    emojo = emoji[math.floor(abs(day_average) / d)]
+
+    return emojo
 
 
 def air_quality_translation(index):
@@ -628,28 +652,6 @@ def localized_azimuth(angle):
     azimuth = a_data[code].get(get_locale(), code)
 
     return azimuth
-
-
-@app.template_filter("feelslike_emoji")
-def feelslike_emoji(day):
-    """Display emoji depending on the average day temperature"""
-    emoji = ["🥶", "😨", "🙂", "😊", "🥵"]
-
-    day_average = (
-        day["apparent_temperature_max"] + day["apparent_temperature_min"]
-    ) / 2
-    if day_average <= MIN_TEMP_ACCEPTABLE:
-        return emoji[0]
-
-    if day_average > MAX_TEMP_ACCEPTABLE:
-        return emoji[-1]
-
-    temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
-    d = temps_range / (len(emoji) + 1)
-
-    emojo = emoji[math.floor(abs(day_average) / d)]
-
-    return emojo
 
 
 # -------------

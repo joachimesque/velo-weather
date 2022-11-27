@@ -260,7 +260,7 @@
                                     </tr>
                                     <tr>
                                         <th title="{{ _('Feels like') }}">
-                                            {{ forecast|feelslike_emoji }}
+                                            {{ forecast.feelslike_emoji }}
                                         </th>
                                         {% for hour in forecast.hour %}
                                             <td class="cell_custom {{ hour|get_classes(timezone) }}" style="--bg-color: {{ hour.apparent_temperature|gradient_temp(ideal_temps) }}; --bg-height: 100%;">
