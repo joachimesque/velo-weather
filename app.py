@@ -69,6 +69,12 @@ PRECIP_ALERT = MAX_RAIN_ACCEPTABLE * 2
 MIN_TEMP_ACCEPTABLE = -5
 MAX_TEMP_ACCEPTABLE = 35
 
+# top probability score, the worst weather
+MAX_PROBA_VALUE = 20
+
+# wind character
+WIND_CHAR = "💨"
+
 # ideal temps
 IDEAL_TEMPS = (13, 19)
 
@@ -78,6 +84,29 @@ HISTORY_DAYS = 5
 # scale of hours of the day
 MIN_HOUR = 7
 MAX_HOUR = 20
+
+azimuths = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+]
+
+azimuths_range = range(len(azimuths) + 1)
+
+azimuth_angles = [i * 360 / len(azimuths) for i in azimuths_range]
 
 
 # -----------
@@ -123,15 +152,17 @@ def index():
     weather_data = get_api_data("forecast", weather_params)
     aqi_data = get_api_data("air-quality", air_quality_params)
 
-    if weather_data:
-        (serialized_weather, current_weather) = serialize_data(weather_data, aqi_data)
-        timezone = weather_data["timezone"]
-    else:
-        (serialized_weather, current_weather, timezone) = ({}, {}, None)
-
     ideal_temps = (
         get_relative_temps(weather_data) if use_relative_temps else IDEAL_TEMPS
     )
+
+    if weather_data:
+        (serialized_weather, current_weather) = serialize_data(
+            weather_data, aqi_data, ideal_temps
+        )
+        timezone = weather_data["timezone"]
+    else:
+        (serialized_weather, current_weather, timezone) = ({}, {}, None)
 
     return render_template(
         "index.html",
@@ -210,7 +241,7 @@ def get_property_from_args_or_session(prop_name, default):
     return prop_value
 
 
-def serialize_data(weather_data, air_quality_data):
+def serialize_data(weather_data, air_quality_data, ideal_temps):
     """Switches the dimension of the table and populate with goodies"""
 
     tz = pytz.timezone(weather_data["timezone"])
@@ -255,7 +286,7 @@ def serialize_data(weather_data, air_quality_data):
             sunset_object = 0
             warnings.warn("Wrong date format for sunset data.")
 
-        serialized_day = serialized_day | get_consolidated_condition(serialized_day)
+        serialized_day = serialized_day | get_condition_properties(serialized_day)
 
         serialized_day["date"] = get_day(day_object)
         serialized_day["hour"] = []
@@ -285,9 +316,7 @@ def serialize_data(weather_data, air_quality_data):
                     hour_index
                 ]
 
-            consolidated_aqi = get_consolidated_aqi_properties(serialized_aqi)
-
-            serialized_hour = serialized_hour | consolidated_aqi
+            serialized_hour = serialized_hour | get_aqi_properties(serialized_aqi)
 
             serialized_hour["is_day"] = False
             if sunrise_object != 0 and sunset_object != 0:
@@ -296,9 +325,32 @@ def serialize_data(weather_data, air_quality_data):
             else:
                 serialized_hour["is_day"] = True
 
-            consolidated_condition = get_consolidated_condition(serialized_hour)
+            serialized_hour = serialized_hour | get_condition_properties(
+                serialized_hour
+            )
+            serialized_hour = serialized_hour | get_proba_properties(serialized_hour)
+            serialized_hour = serialized_hour | get_wind_azimuth_properties(
+                serialized_hour["winddirection_10m"]
+            )
+            serialized_hour = serialized_hour | get_precipitation_properties(
+                serialized_hour["precipitation"]
+            )
 
-            serialized_hour = serialized_hour | consolidated_condition
+            temperature_color_properties = {
+                "temperature_2m_color": temperature_color(
+                    serialized_hour["temperature_2m"], ideal_temps
+                ),
+                "apparent_temperature_color": temperature_color(
+                    serialized_hour["apparent_temperature"], ideal_temps
+                ),
+            }
+            serialized_hour = serialized_hour | temperature_color_properties
+
+            wind_properties = {
+                "windgusts_notice": wind_notice(serialized_hour["windgusts_10m"]),
+                "windspeed_notice": wind_notice(serialized_hour["windspeed_10m"]),
+            }
+            serialized_hour = serialized_hour | wind_properties
 
             if weather_data["current_weather"]["time"] == hour:
                 current_weather = serialized_hour
@@ -310,12 +362,115 @@ def serialize_data(weather_data, air_quality_data):
                 if hour_object.hour < now.hour and hour_object.day == now.day:
                     serialized_hour["past"] = True
 
+                serialized_hour["classes"] = get_classes(
+                    serialized_hour, weather_data["timezone"]
+                )
+
                 serialized_day["hour"].append(serialized_hour)
 
         if now.hour <= MAX_HOUR or day_object != now.date():
             serialized.append(serialized_day)
 
     return (serialized, current_weather)
+
+
+def gradient(value, max, start=(0, 0.8, 1), end=(0, 0.8, 0.5)):
+    """With a value from 0 to max, generate the correct gradient"""
+    value = int(value)
+    c1 = Color(hsl=start)
+    c2 = Color(hsl=end)
+    gradient = list(c1.range_to(c2, max + 1))
+    value = value if value < max else max
+    return gradient[int(value)].hex
+
+
+def wind_notice(windspeed):
+    """Repeats a character depending on the force of the wind"""
+    return "".join(
+        repeat(
+            WIND_CHAR, (round(windspeed / 10)) if windspeed < MAX_WIND_ACCEPTABLE else 4
+        )
+    )
+
+
+def feelslike_emoji(day):
+    """Display emoji depending on the average day temperature"""
+    emoji = ["🥶", "😨", "🙂", "😊", "🥵"]
+
+    day_average = (
+        day["apparent_temperature_max"] + day["apparent_temperature_min"]
+    ) / 2
+    if day_average <= MIN_TEMP_ACCEPTABLE:
+        return emoji[0]
+
+    if day_average > MAX_TEMP_ACCEPTABLE:
+        return emoji[-1]
+
+    temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
+    d = temps_range / (len(emoji) + 1)
+
+    emojo = emoji[math.floor(abs(day_average) / d)]
+
+    return emojo
+
+
+def temperature_color(temp, ideal_temps):
+    """Handle gradient for temp around ideal temp"""
+
+    # keep temp between acceptable range
+    temp = min(max(temp, MIN_TEMP_ACCEPTABLE), MAX_TEMP_ACCEPTABLE)
+
+    gradient = []
+
+    ideal_min, ideal_max = ideal_temps
+
+    if ideal_min < MIN_TEMP_ACCEPTABLE:
+        ideal_min = MIN_TEMP_ACCEPTABLE
+
+    if ideal_max > MAX_TEMP_ACCEPTABLE:
+        ideal_max = MAX_TEMP_ACCEPTABLE
+
+    for temperature in range(ideal_min - MIN_TEMP_ACCEPTABLE):
+        temp_luminance = 50 + (50 / (ideal_min - MIN_TEMP_ACCEPTABLE)) * temperature
+        gradient.append("hsl(220,100%,{}%)".format(round(temp_luminance)))
+
+    for temperature in range(ideal_max - ideal_min):
+        gradient.append("hsl(220,100%,100%)")
+
+    for temperature in range(MAX_TEMP_ACCEPTABLE - ideal_max + 1):
+        temp_luminance = (
+            100 - (50 / (MAX_TEMP_ACCEPTABLE - ideal_max + 1)) * temperature
+        )
+        gradient.append("hsl(22,100%,{}%)".format(round(temp_luminance)))
+
+    gradient.append("hsl(22,100%,50%)")
+
+    return gradient[round(temp) - MIN_TEMP_ACCEPTABLE]
+
+
+def air_quality_translation(index):
+    """Returns a translated term, from an index / 10"""
+
+    terms = [
+        _("No data"),
+        _("Very good"),
+        _("Very good"),
+        _("Good"),
+        _("Good"),
+        _("Average"),
+        _("Below average"),
+        _("Below average"),
+        _("Bad"),
+        _("Bad"),
+        _("Very bad"),
+    ]
+
+    return terms[index]
+
+
+def air_quality_gradient(index):
+    """Returns a hex color on a gradient, from an index / 10"""
+    return gradient(index, 10, start=(0.4, 0.8, 0.5)) if index > 0 else "#fff"
 
 
 def get_relative_temps(data):
@@ -367,7 +522,7 @@ def get_day(d, format="%A %d %b"):
     return format_date(date=d, format=localized_format)
 
 
-def get_consolidated_aqi_properties(air_quality):
+def get_aqi_properties(air_quality):
     """
     Returns an index for the air quality based on PM10, NO2, SO2, O3
     Based on http://www.atmo-alsace.net/site/Explications-sur-le-calcul-des-indices-22.html
@@ -398,76 +553,6 @@ def get_consolidated_aqi_properties(air_quality):
     }
 
 
-def feelslike_emoji(day):
-    """Display emoji depending on the average day temperature"""
-    emoji = ["🥶", "😨", "🙂", "😊", "🥵"]
-
-    day_average = (
-        day["apparent_temperature_max"] + day["apparent_temperature_min"]
-    ) / 2
-    if day_average <= MIN_TEMP_ACCEPTABLE:
-        return emoji[0]
-
-    if day_average > MAX_TEMP_ACCEPTABLE:
-        return emoji[-1]
-
-    temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
-    d = temps_range / (len(emoji) + 1)
-
-    emojo = emoji[math.floor(abs(day_average) / d)]
-
-    return emojo
-
-
-def air_quality_translation(index):
-    """Returns a translated term, from an index / 10"""
-
-    terms = [
-        _("No data"),
-        _("Very good"),
-        _("Very good"),
-        _("Good"),
-        _("Good"),
-        _("Average"),
-        _("Below average"),
-        _("Below average"),
-        _("Bad"),
-        _("Bad"),
-        _("Very bad"),
-    ]
-
-    return terms[index]
-
-
-def air_quality_gradient(index):
-    """Returns a hex color on a gradient, from an index / 10"""
-    return gradient(index, 10, start=(0.4, 0.8, 0.5)) if index > 0 else "#fff"
-
-
-azimuths = [
-    "N",
-    "NNE",
-    "NE",
-    "ENE",
-    "E",
-    "ESE",
-    "SE",
-    "SSE",
-    "S",
-    "SSW",
-    "SW",
-    "WSW",
-    "W",
-    "WNW",
-    "NW",
-    "NNW",
-]
-
-azimuths_range = range(len(azimuths) + 1)
-
-azimuth_angles = [i * 360 / len(azimuths) for i in azimuths_range]
-
-
 def get_closest_azimuth(angle):
     """Converts an angle to an azimuth code"""
 
@@ -476,12 +561,6 @@ def get_closest_azimuth(angle):
     return closest_azimuth % len(azimuths)
 
 
-# ----------------
-# TEMPLATE FILTERS
-# ----------------
-
-
-@app.template_filter("get_classes")
 def get_classes(hour, timezone):
     """Return CSS classes for the cell, based on the current hour"""
     classes = ["cell_day"] if hour["is_day"] else ["cell_night"]
@@ -492,80 +571,7 @@ def get_classes(hour, timezone):
     return " ".join(classes)
 
 
-@app.template_filter("gradient")
-def gradient(value, max, start=(0, 0.8, 1), end=(0, 0.8, 0.5)):
-    """With a value from 0 to max, generate the correct gradient"""
-    value = int(value)
-    c1 = Color(hsl=start)
-    c2 = Color(hsl=end)
-    gradient = list(c1.range_to(c2, max + 1))
-    value = value if value < max else max
-    return gradient[int(value)].hex
-
-
-@app.template_filter("wind_repeat")
-def wind_repeat(speed_kph, character):
-    """Repeats a character depending on the force of the wind"""
-    return "".join(
-        repeat(
-            character, (round(speed_kph / 10)) if speed_kph < MAX_WIND_ACCEPTABLE else 4
-        )
-    )
-
-
-@app.template_filter("precip_percent")
-def precip_percent(precip_mm):
-    """Handle vertical scale for precip_mm"""
-    precip_mm = precip_mm + 1 if precip_mm > 0 else precip_mm
-    precip_mm = min(precip_mm, MAX_RAIN_ACCEPTABLE)
-    return (precip_mm / MAX_RAIN_ACCEPTABLE) * 100
-
-
-@app.template_filter("precip_gradient")
-def precip_gradient(precip_mm):
-    """Handle gradient for precip_mm"""
-    if precip_mm >= PRECIP_ALERT:
-        return "#000"
-
-    return "hsl(210, 80%, 50%)"
-
-
-@app.template_filter("gradient_temp")
-def gradient_temp(temp, ideal_temps):
-    """Handle gradient for temp around ideal temp"""
-    temp = temp if temp > MIN_TEMP_ACCEPTABLE else MIN_TEMP_ACCEPTABLE
-    temp = temp if temp < MAX_TEMP_ACCEPTABLE else MAX_TEMP_ACCEPTABLE
-
-    gradient = []
-
-    ideal_min, ideal_max = ideal_temps
-
-    if ideal_min < MIN_TEMP_ACCEPTABLE:
-        ideal_min = MIN_TEMP_ACCEPTABLE
-
-    if ideal_max > MAX_TEMP_ACCEPTABLE:
-        ideal_max = MAX_TEMP_ACCEPTABLE
-
-    for temperature in range(ideal_min - MIN_TEMP_ACCEPTABLE):
-        temp_luminance = 50 + (50 / (ideal_min - MIN_TEMP_ACCEPTABLE)) * temperature
-        gradient.append("hsl(220,100%,{}%)".format(round(temp_luminance)))
-
-    for temperature in range(ideal_max - ideal_min):
-        gradient.append("hsl(220,100%,100%)")
-
-    for temperature in range(MAX_TEMP_ACCEPTABLE - ideal_max + 1):
-        temp_luminance = (
-            100 - (50 / (MAX_TEMP_ACCEPTABLE - ideal_max + 1)) * temperature
-        )
-        gradient.append("hsl(22,100%,{}%)".format(round(temp_luminance)))
-
-    gradient.append("hsl(22,100%,50%)")
-
-    return gradient[round(temp) - MIN_TEMP_ACCEPTABLE]
-
-
-@app.template_filter("proba_value")
-def proba_value(hour):
+def get_proba_properties(hour):
     """Compute a probability and output percentage"""
     # chance = round(int(hour["chance_of_rain"]) / (100 / 3))
     precip = min(hour["precipitation"], MAX_RAIN_ACCEPTABLE)
@@ -599,22 +605,23 @@ def proba_value(hour):
         # rain is more dangerous by night (0-5)
         proba += 5 * precip / MAX_RAIN_ACCEPTABLE
 
-    return round(proba)
+    proba = round(proba)
 
-
-@app.template_filter("proba_gradient")
-def proba_gradient(hour):
-    """Output gradient color"""
-    max_val = 24
-    probability = min(proba_value(hour), max_val)
-
+    # Probability gradient color
     start_color = (0.4, 0.8, 0.5)
     end_color = (0, 0.8, 0.6)
 
-    return gradient(probability, max=max_val, start=start_color, end=end_color)
+    proba_gradient = gradient(
+        min(proba, MAX_PROBA_VALUE),
+        max=MAX_PROBA_VALUE,
+        start=start_color,
+        end=end_color,
+    )
+
+    return {"proba_value": proba, "proba_gradient": proba_gradient}
 
 
-def get_consolidated_condition(hour_object):
+def get_condition_properties(hour_object):
     """Translate weather condition from code"""
 
     # conditions list from https://www.weatherapi.com/docs/#weather-icons
@@ -640,8 +647,7 @@ def get_consolidated_condition(hour_object):
     }
 
 
-@app.template_filter("localized_azimuth")
-def localized_azimuth(angle):
+def get_wind_azimuth_properties(angle):
     """Translate azimuth from angle"""
 
     code = azimuths[get_closest_azimuth(angle)]
@@ -651,7 +657,24 @@ def localized_azimuth(angle):
 
     azimuth = a_data[code].get(get_locale(), code)
 
-    return azimuth
+    return {
+        "wind_azimuth_abbr": azimuth[0],
+        "wind_azimuth_full": azimuth[1],
+    }
+
+
+def get_precipitation_properties(precipitation):
+    """Handle color and percentage properties for precipitation_mm"""
+    precipitation = precipitation + 1 if precipitation > 0 else precipitation
+    precipitation = min(precipitation, MAX_RAIN_ACCEPTABLE)
+    percentage = (precipitation / MAX_RAIN_ACCEPTABLE) * 100
+
+    color = "#000" if precipitation >= PRECIP_ALERT else "hsl(210, 80%, 50%)"
+
+    return {
+        "precip_percent": percentage,
+        "precip_gradient": color,
+    }
 
 
 # -------------
@@ -674,7 +697,7 @@ def get_locale():
 app.jinja_env.globals["get_locale"] = get_locale
 
 
-def asset_url(asset_path):
+def get_asset_url(asset_path):
     """Returns a full asset URL from path"""
 
     domain = request.host_url
@@ -683,4 +706,4 @@ def asset_url(asset_path):
     return "%s%s" % (domain, url_for("static", filename=asset_path))
 
 
-app.jinja_env.globals["asset_url"] = asset_url
+app.jinja_env.globals["get_asset_url"] = get_asset_url
