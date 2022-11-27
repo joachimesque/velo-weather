@@ -3,6 +3,7 @@ import math
 import os
 import re
 import urllib
+import warnings
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -236,12 +237,21 @@ def serialize_data(weather_data, air_quality_data):
         for day_prop in daily_properties:
             serialized_day[day_prop] = weather_data["daily"][day_prop][day_index]
 
-        sunrise_object = datetime.fromisoformat(
-            weather_data["daily"]["sunrise"][day_index]
-        )
-        sunset_object = datetime.fromisoformat(
-            weather_data["daily"]["sunset"][day_index]
-        )
+        try:
+            sunrise_object = datetime.fromisoformat(
+                weather_data["daily"]["sunrise"][day_index]
+            )
+        except:
+            sunrise_object = 0
+            warnings.warn("Wrong date format for sunrise data.")
+
+        try:
+            sunset_object = datetime.fromisoformat(
+                weather_data["daily"]["sunset"][day_index]
+            )
+        except:
+            sunset_object = 0
+            warnings.warn("Wrong date format for sunset data.")
 
         serialized_day = serialized_day | get_consolidated_condition(serialized_day)
 
@@ -277,7 +287,10 @@ def serialize_data(weather_data, air_quality_data):
             serialized_hour = serialized_hour | consolidated_aqi
 
             serialized_hour["is_day"] = False
-            if sunrise_object <= hour_object <= sunset_object:
+            if sunrise_object != 0 and sunset_object != 0:
+                if sunrise_object <= hour_object <= sunset_object:
+                    serialized_hour["is_day"] = True
+            else:
                 serialized_hour["is_day"] = True
 
             consolidated_condition = get_consolidated_condition(serialized_hour)
