@@ -43,7 +43,7 @@ css = Bundle(
 assets.register("js_all", js)
 assets.register("css_all", css)
 
-
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=365)
 app.config["BABEL_TRANSLATION_DIRECTORIES"] = "translations"
 app.config["LANGUAGES"] = {"en": "English", "fr": "Français"}
 
@@ -107,6 +107,16 @@ azimuths = [
 azimuths_range = range(len(azimuths) + 1)
 
 azimuth_angles = [i * 360 / len(azimuths) for i in azimuths_range]
+
+
+# ------------------
+# PERMANENT SESSIONS
+# ------------------
+
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 
 # -----------
