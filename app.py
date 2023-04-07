@@ -431,7 +431,7 @@ def feelslike_emoji(day):
     temps_range = MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE
     d = temps_range / (len(emoji) + 1)
 
-    emojo = emoji[math.floor(abs(day_average) / d)]
+    emojo = emoji[min(math.floor(abs(day_average) / d), len(emoji) - 1)]
 
     return emojo
 
