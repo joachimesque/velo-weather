@@ -36,6 +36,47 @@
     --gradient-height: 10000px;
     --block-height: 45px;
     --gradient-adjusted: calc(var(--gradient-height) - var(--block-height));
+
+
+    --color-primary: hsl(var(--color-base), 15%, 15%);
+
+    --color-base: 270deg;
+    --transition: 0.25s ease;
+
+    --color-grey-dark: hsl(var(--color-base), 15%, 15%);
+    --color-grey-light: hsl(var(--color-base), 15%, 75%);
+
+    --color-grey-low-contrast: var(--color-grey-light);
+    --color-grey-high-contrast: var(--color-grey-dark);
+    --color-text: hsl(var(--color-base), 0%, 5%);
+    --bg-color: white;
+    --color-action-low-contrast: hsl(var(--color-base), 80%, 80%);
+    --color-action-medium-contrast: hsl(var(--color-base), 70%, 40%);
+    --color-action-high-contrast: hsl(var(--color-base), 90%, 25%);
+}
+
+body.theme-dark {
+    --color-primary: hsl(var(--color-base), 35%, 70%);
+    --color-grey-low-contrast: hsl(var(--color-base), 10%, 20%);
+    --color-grey-high-contrast: hsl(var(--color-base), 10%, 70%);
+    --color-text: white;
+    --bg-color: hsl(var(--color-base), 45%, 5%);
+    --color-action-low-contrast: hsl(var(--color-base), 30%, 25%);
+    --color-action-medium-contrast: hsl(var(--color-base), 50%, 50%);
+    --color-action-high-contrast: hsl(var(--color-base), 100%, 80%);
+}
+
+body.theme-dark td.cell_custom_opportunity {
+    background-image: linear-gradient(0deg, rgba(0,126,5,1) 0%, rgba(97,116,0,1) 37%, rgba(135,79,0,1) 75%, rgba(128,0,0,1) 100%);
+}
+
+body.theme-dark td.cell_custom_height::after {
+    background-image: linear-gradient(0deg, hsla(210, 80%, 30%, 1) 0%, hsla(210, 80%, 30%, 1) var(--bg-limit), hsla(210, 80%, 30%, 0) var(--bg-limit), hsla(210, 80%, 30%, 0) 100%);
+}
+
+body {
+  color: var(--color-text);
+  background-color: var(--bg-color);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -59,7 +100,7 @@ a[href] {
 #location-reset {
   margin-left: calc(-16px - 36px);
   margin-block: 3px;
-  background-color: white;
+  background-color: var(--bg-color);
   border: 1px solid transparent;
 }
 
@@ -146,7 +187,7 @@ th.cell_night, td.cell_night {
 }
 
 tr > :first-child {
-    background-color: white;
+    background-color: var(--bg-color);
     position: sticky;
     left: 0;
     box-sizing: border-box;
@@ -171,7 +212,7 @@ td .value.invisible_value {
 }
 table:focus td .value,
 table:hover td .value {
-    background-color: hsl(0, 0%, 100%);
+    background-color: var(--bg-color);
     opacity: 1;
 }
 td.cell_custom, td.cell_custom_height::after {
@@ -200,7 +241,7 @@ td.cell_custom_height::after {
     width: 100%;
     height: calc(1% * var(--bg-percentage, 0));
     z-index: -1;
-    background-image: linear-gradient(0deg, hsl(210, 80%, 50%) 0%, hsl(210, 80%, 50%) var(--bg-limit), rgba(255,255,255,1) var(--bg-limit), rgba(255,255,255,1) 100%);
+    background-image: linear-gradient(0deg, hsla(210, 80%, 50%, 1) 0%, hsla(210, 80%, 50%, 1) var(--bg-limit), hsla(210, 80%, 50%, 0) var(--bg-limit), hsla(210, 80%, 50%, 0) 100%);
 }
 
 /* CURRENT WEATHER */
@@ -278,7 +319,7 @@ main.is-loading .loader {
     dl.current_weather_summary dt,
     dl.current_weather_summary dd {
         position: relative;
-        background: white;
+        background: var(--bg-color);
         z-index: 1;
     }
     .current_weather_title span,

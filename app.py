@@ -27,6 +27,7 @@ app = Flask(__name__, static_url_path="")
 assets = Environment(app)
 
 js = Bundle(
+    "scripts/theme_switch.js",
     "scripts/active_hour_scroll.js",
     "scripts/location_autocomplete.js",
     "scripts/pull_to_refresh.js",
