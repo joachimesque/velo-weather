@@ -355,15 +355,17 @@ def serialize_data(weather_data, air_quality_data, ideal_temps):
                 serialized_hour["precipitation"]
             )
 
-            temperature_color_properties = {
-                "temperature_2m_color": temperature_color(
-                    serialized_hour["temperature_2m"], ideal_temps
+            temperature_percentage_properties = {
+                "ideal_min": temperature_percentage(ideal_temps[0]),
+                "ideal_max": temperature_percentage(ideal_temps[1]),
+                "temperature_2m_percentage": temperature_percentage(
+                    serialized_hour["temperature_2m"]
                 ),
-                "apparent_temperature_color": temperature_color(
-                    serialized_hour["apparent_temperature"], ideal_temps
+                "apparent_temperature_percentage": temperature_percentage(
+                    serialized_hour["apparent_temperature"]
                 ),
             }
-            serialized_hour = serialized_hour | temperature_color_properties
+            serialized_hour = serialized_hour | temperature_percentage_properties
 
             wind_properties = {
                 "windgusts_notice": wind_notice(serialized_hour["windgusts_10m"]),
@@ -433,38 +435,16 @@ def feelslike_emoji(day):
     return emojo
 
 
-def temperature_color(temp, ideal_temps):
-    """Handle gradient for temp around ideal temp"""
+def temperature_percentage(temp):
+    """Handle percentage for a temperature"""
 
     # keep temp between acceptable range
+
     temp = min(max(temp, MIN_TEMP_ACCEPTABLE), MAX_TEMP_ACCEPTABLE)
 
-    gradient = []
-
-    ideal_min, ideal_max = ideal_temps
-
-    if ideal_min < MIN_TEMP_ACCEPTABLE:
-        ideal_min = MIN_TEMP_ACCEPTABLE
-
-    if ideal_max > MAX_TEMP_ACCEPTABLE:
-        ideal_max = MAX_TEMP_ACCEPTABLE
-
-    for temperature in range(ideal_min - MIN_TEMP_ACCEPTABLE):
-        temp_luminance = 50 + (50 / (ideal_min - MIN_TEMP_ACCEPTABLE)) * temperature
-        gradient.append("hsl(220,100%,{}%)".format(round(temp_luminance)))
-
-    for temperature in range(ideal_max - ideal_min):
-        gradient.append("hsl(220,100%,100%)")
-
-    for temperature in range(MAX_TEMP_ACCEPTABLE - ideal_max + 1):
-        temp_luminance = (
-            100 - (50 / (MAX_TEMP_ACCEPTABLE - ideal_max + 1)) * temperature
-        )
-        gradient.append("hsl(22,100%,{}%)".format(round(temp_luminance)))
-
-    gradient.append("hsl(22,100%,50%)")
-
-    return gradient[round(temp) - MIN_TEMP_ACCEPTABLE]
+    return (
+        (temp - MIN_TEMP_ACCEPTABLE) / (MAX_TEMP_ACCEPTABLE - MIN_TEMP_ACCEPTABLE) * 100
+    )
 
 
 def air_quality_translation(index):
@@ -485,11 +465,6 @@ def air_quality_translation(index):
     ]
 
     return terms[index]
-
-
-def air_quality_gradient(index):
-    """Returns a hex color on a gradient, from an index / 10"""
-    return gradient(index, 10, start=(0.4, 0.8, 0.5)) if index > 0 else "#fff"
 
 
 def get_relative_temps(data):
@@ -568,7 +543,9 @@ def get_aqi_properties(air_quality):
     return {
         "air_quality_index": index,
         "air_quality_translation": air_quality_translation(index),
-        "air_quality_gradient": air_quality_gradient(index),
+        "air_quality_gradient": gradient(index, 10, start=(0.4, 0.8, 0.5))
+        if index > 0
+        else "#fff",
     }
 
 
@@ -626,18 +603,10 @@ def get_proba_properties(hour):
 
     proba = round(proba)
 
-    # Probability gradient color
-    start_color = (0.4, 0.8, 0.5)
-    end_color = (0, 0.8, 0.6)
+    # Probability percentage
+    proba_percentage = proba * 100 / MAX_PROBA_VALUE
 
-    proba_gradient = gradient(
-        min(proba, MAX_PROBA_VALUE),
-        max=MAX_PROBA_VALUE,
-        start=start_color,
-        end=end_color,
-    )
-
-    return {"proba_value": proba, "proba_gradient": proba_gradient}
+    return {"proba_value": proba, "proba_percentage": proba_percentage}
 
 
 def get_condition_properties(hour_object):
@@ -683,16 +652,15 @@ def get_wind_azimuth_properties(angle):
 
 
 def get_precipitation_properties(precipitation):
-    """Handle color and percentage properties for precipitation_mm"""
+    """Handle percentage properties for precipitation_mm and alert level"""
     precipitation = precipitation + 1 if precipitation > 0 else precipitation
     precipitation = min(precipitation, MAX_RAIN_ACCEPTABLE)
     percentage = (precipitation / MAX_RAIN_ACCEPTABLE) * 100
-
-    color = "#000" if precipitation >= PRECIP_ALERT else "hsl(210, 80%, 50%)"
+    precip_alert = (PRECIP_ALERT / MAX_RAIN_ACCEPTABLE) * 100
 
     return {
         "precip_percent": percentage,
-        "precip_gradient": color,
+        "precip_alert": precip_alert,
     }
 
 

@@ -207,7 +207,7 @@
                                     <tr>
                                         <th title="{{ _('Very complicated opportunity indicator') }}">🎲</th>
                                         {% for hour in forecast.hour %}
-                                            <td class="cell_custom {{ hour.classes }}" style="--bg-color: {{ hour.proba_gradient }}; --bg-height: 100%;">
+                                            <td class="cell_custom cell_custom_opportunity {{ hour.classes }}" style="--bg-percentage: {{ hour.proba_percentage }};">
                                                 <strong class="invisible_value value">
                                                     {{ hour.proba_value }}
                                                 </strong>
@@ -245,7 +245,7 @@
                                     <tr>
                                         <th title="{{ _('Precipitation (mm)') }}">☔️</th>
                                         {% for hour in forecast.hour %}
-                                            <td class="cell_custom {{ hour.classes }}" style="--bg-color: {{ hour.precip_gradient }}; --bg-height: {{ hour.precip_percent }}%;" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precipitation)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precipitation=hour.precipitation ) }}">
+                                            <td class="cell_custom_height {{ hour.classes }}" style="--bg-percentage: {{ hour.precip_percent }}; --bg-limit: {{ hour.precip_alert }}%" title="{{ _('Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is %(precipitation)s millimeters.', chance_of_rain=hour.chance_of_rain, percent=_('&percnt;'), precipitation=hour.precipitation ) }}">
                                                 <span class="value"><small>{{ hour.precipitation }}{{_("mm")}}</small></span>
                                             </td>
                                         {% endfor %}
@@ -253,7 +253,7 @@
                                     <tr>
                                         <th title="{{ _('Temperature') }}">🌡</th>
                                         {% for hour in forecast.hour %}
-                                            <td class="cell_custom {{ hour.classes }}" style="--bg-color: {{ hour.temperature_2m_color }}; --bg-height: 100%;">
+                                            <td class="cell_custom cell_custom_temperature {{ hour.classes }}" style="--bg-percentage: {{ hour.temperature_2m_percentage }}; --ideal-min: {{ hour.ideal_min }}%; --ideal-max: {{ hour.ideal_max }}%;">
                                                 <span class="value">{{ hour.temperature_2m }}{{_('°C')}}</span>
                                             </td>
                                         {% endfor %}
@@ -263,7 +263,7 @@
                                             {{ forecast.feelslike_emoji }}
                                         </th>
                                         {% for hour in forecast.hour %}
-                                            <td class="cell_custom {{ hour.classes }}" style="--bg-color: {{ hour.apparent_temperature_color }}; --bg-height: 100%;">
+                                            <td class="cell_custom cell_custom_temperature {{ hour.classes }}" style="--bg-percentage: {{ hour.apparent_temperature_percentage }}; --ideal-min: {{ hour.ideal_min }}%; --ideal-max: {{ hour.ideal_max }}%;">
                                                 <span class="value">{{ hour.apparent_temperature }}{{_('°C')}}</span>
                                             </td>
                                         {% endfor %}

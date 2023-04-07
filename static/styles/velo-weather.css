@@ -3,7 +3,12 @@
     --font-family-sans: "IBM Plex Sans Condensed", sans-serif;
     --font-family-mono: "IBM Plex Mono", monospace;
     --color-primary: #2B2135;
+
+    --gradient-height: 10000px;
+    --block-height: 45px;
+    --gradient-adjusted: calc(var(--gradient-height) - var(--block-height));
 }
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
@@ -140,18 +145,33 @@ table:hover td .value {
     background-color: hsl(0, 0%, 100%);
     opacity: 1;
 }
-td.cell_custom {
+td.cell_custom, td.cell_custom_height::after {
+    height: var(--block-height);
+    background-size: auto var(--gradient-height);
+    background-position: 0px calc(var(--gradient-adjusted) / 100 * var(--bg-percentage) + var(--block-height));
+}
+
+td.cell_custom_opportunity {
+    background-image: linear-gradient(0deg, rgba(61,177,66,1) 0%, rgba(212,252,69,1) 37.5%, rgba(255,149,0,1) 75%, rgba(253,29,29,1) 100%);
+}
+
+td.cell_custom_temperature {
+    background-image: linear-gradient(0deg, rgba(34,164,195,1) 0%, rgba(34,164,195,0) var(--ideal-min), rgba(253,187,45,0) var(--ideal-max), rgba(253,187,45,1) 100%);
+}
+
+td.cell_custom_height {
     position: relative;
 }
-td.cell_custom::after {
+
+td.cell_custom_height::after {
     content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: var(--bg-height, 0%);
-    background-color: var(--bg-color);
+    height: calc(1% * var(--bg-percentage, 0));
     z-index: -1;
+    background-image: linear-gradient(0deg, hsl(210, 80%, 50%) 0%, hsl(210, 80%, 50%) var(--bg-limit), rgba(255,255,255,1) var(--bg-limit), rgba(255,255,255,1) 100%);
 }
 
 /* CURRENT WEATHER */
