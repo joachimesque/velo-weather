@@ -374,7 +374,7 @@ def serialize_data(weather_data, air_quality_data, ideal_temps):
             }
             serialized_hour = serialized_hour | wind_properties
 
-            if weather_data["current_weather"]["time"] == hour:
+            if weather_data["current_weather"]["time"][0:-3] == hour[0:-3]:
                 current_weather = serialized_hour
 
             if MIN_HOUR <= hour_object.hour <= MAX_HOUR:
