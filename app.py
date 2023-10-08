@@ -605,7 +605,7 @@ def get_proba_properties(hour):
     proba = round(proba)
 
     # Probability percentage
-    proba_percentage = proba * 100 / MAX_PROBA_VALUE
+    proba_percentage = min(100, proba * 100 / MAX_PROBA_VALUE)
 
     return {"proba_value": proba, "proba_percentage": proba_percentage}
 
