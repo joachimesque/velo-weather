@@ -602,7 +602,7 @@ def get_proba_properties(hour):
         # rain is more dangerous by night (0-5)
         proba += 5 * precip / MAX_RAIN_ACCEPTABLE
 
-    proba = round(proba)
+    proba = min(round(proba), MAX_PROBA_VALUE)
 
     # Probability percentage
     proba_percentage = min(100, proba * 100 / MAX_PROBA_VALUE)
