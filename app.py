@@ -9,6 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 from itertools import repeat
 
+import babel
 import pytz
 import requests
 from colour import Color
@@ -675,7 +676,6 @@ def get_precipitation_properties(precipitation):
 # -------------
 
 
-@babel.localeselector
 def get_locale():
     if request.args.get("lang"):
         session["lang"] = request.args.get("lang")
@@ -700,3 +700,5 @@ def get_asset_url(asset_path):
 
 
 app.jinja_env.globals["get_asset_url"] = get_asset_url
+
+babel.init_app(app, locale_selector=get_locale)
