@@ -31,7 +31,6 @@ js = Bundle(
     "scripts/theme_switch.js",
     "scripts/active_hour_scroll.js",
     "scripts/location_autocomplete.js",
-    "scripts/pull_to_refresh.js",
     # filters="jsmin",
     output="gen/packed.js",
 )

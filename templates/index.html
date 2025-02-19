@@ -22,14 +22,13 @@
         <meta property="og:image" content="{{ get_asset_url('images/og_image.png') }}"/>
         <meta property="og:image:width" content="800"/>
         <meta property="og:image:height" content="600"/>
+
+        {% assets "js_all" %}
+            <script type="module" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
     </head>
     <body>
         <main class="container">
-            <div class="loader" aria-hidden="true">
-                <img alt="" width="42" height="42" src="{{ get_asset_url('images/loading.svg') }}" />
-                <span>{{ _('Loading…') }}</span>
-            </div>
-
             <header>
                 <div class="row flex-align-items-center">
                     <a class="col header_logo" href="/">
@@ -55,6 +54,11 @@
                 </div>
                 <theme-switch dark="Mode sombre" light="Mode clair" style=""></theme-switch>
             </header>
+
+            <div class="loader" aria-hidden="true">
+                <img alt="" width="42" height="42" src="{{ get_asset_url('images/loading.svg') }}" />
+                <span>{{ _('Loading…') }}</span>
+            </div>
 
             {% for data in computed_data %}
 
@@ -307,10 +311,5 @@
                 </div>
             </footer>
         </main>
-
-        {% assets "js_all" %}
-            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
-
     </body>
 </html>
