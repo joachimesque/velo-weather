@@ -331,9 +331,8 @@ main:has(.current_weather) .loader {
 @media(min-width: 768px) {
     /* CURRENT WEATHER */
     .current_weather {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 64rem;
+        margin-inline: auto;
+        width: min(40rem, 100%);
     }
     .current_weather_title {
         position: relative;
@@ -341,7 +340,7 @@ main:has(.current_weather) .loader {
         flex-direction: row;
         gap: 10px;
         justify-content: space-between;
-        align-items: center;
+        align-items: last baseline;
     }
     .current_weather_title::before {
         display: block;
@@ -352,12 +351,12 @@ main:has(.current_weather) .loader {
         bottom: .2em;
         z-index: 0;
     }
-    .current_weather_title span {
+    .current_weather_title :is(span, small) {
         position: relative;
         background: var(--bg-color);
         z-index: 1;
     }
-    .current_weather_title span {
+    .current_weather_title small {
         text-align: left;
         padding-right: 0.6em;
     }
