@@ -10,7 +10,7 @@ It's just a standard Flask app :-). It can be deployed on Dokku and Heroku.
 
 ```fish
 $ source venv/bin/activate.fish
-$ SECRET_KEY=set_me_up gunicorn app:app --reload
+$ SECRET_KEY=set_me_up gunicorn app:app --reload -k gevent
 ```
 
 
