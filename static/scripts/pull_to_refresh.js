@@ -36,7 +36,9 @@ const swipe = (e) => {
     const changeY = pStart.y < pCurrent.y ? Math.abs(pStart.y - pCurrent.y) : 0;
 
     if (changeY > 100 && windowIsStandalone()) {
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
     }
 }
 
