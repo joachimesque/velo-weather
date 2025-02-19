@@ -241,6 +241,48 @@ theme-switch {
     min-height: 20px;
 }
 
+dl.current_weather_summary div {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+dl.current_weather_summary div::before {
+    display: block;
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid color-mix(in hsl, currentColor, transparent 80%);
+    bottom: .2em;
+    z-index: 0;
+}
+
+dl.current_weather_summary dt,
+dl.current_weather_summary dd {
+    position: relative;
+    background: var(--bg-color);
+    z-index: 1;
+}
+
+dl.current_weather_summary dt {
+    text-align: left;
+    padding-right: 0.6em;
+}
+
+dl.current_weather_summary dd {
+    text-align: right;
+    padding-left: 0.3em;
+}
+
+.card {
+    border: .5px solid color-mix(in hsl, currentcolor, transparent 75%);
+    box-shadow: 0 1px 3px hsla(0deg, 0%, 0%, 0.4);
+}
+
+
 /* LOADER */
 .loader {
   min-height: 100px;
@@ -264,8 +306,7 @@ main:has(.current_weather) .loader {
         margin-right: auto;
         max-width: 64rem;
     }
-    .current_weather_title,
-    dl.current_weather_summary div {
+    .current_weather_title {
         position: relative;
         display: flex;
         flex-direction: row;
@@ -273,30 +314,25 @@ main:has(.current_weather) .loader {
         justify-content: space-between;
         align-items: center;
     }
-    .current_weather_title::before,
-    dl.current_weather_summary div::before {
+    .current_weather_title::before {
         display: block;
         content: "";
         position: absolute;
         width: 100%;
-        border-bottom: 1px solid hsl(0, 0%, 85%);
+        border-bottom: 1px solid color-mix(in hsl, currentColor, transparent 80%);
         bottom: .2em;
         z-index: 0;
     }
-    .current_weather_title span,
-    dl.current_weather_summary dt,
-    dl.current_weather_summary dd {
+    .current_weather_title span {
         position: relative;
         background: var(--bg-color);
         z-index: 1;
     }
-    .current_weather_title span,
-    dl.current_weather_summary dt {
+    .current_weather_title span {
         text-align: left;
         padding-right: 0.6em;
     }
-    .current_weather_title span.current_weather_icon,
-    dl.current_weather_summary dd {
+    .current_weather_title span.current_weather_icon {
         text-align: right;
         padding-left: 0.3em;
     }
