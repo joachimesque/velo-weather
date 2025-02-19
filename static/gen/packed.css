@@ -123,7 +123,7 @@ a.header_logo {
     text-overflow: ellipsis;
 }
 .forecast_day img {
-    max-width: 1.6em;
+    max-width: 48px;
     vertical-align: middle;
 }
 td, th {
@@ -256,11 +256,18 @@ td.cell_custom_height::after {
     gap: .4em;
 }
 span.current_weather_icon img {
-    height: 1.6em;
+    height: 48px;
     width: auto;
+    font-weight: initial;
+    font-size: initial;
 }
 .one_line {
     white-space: nowrap;
+}
+
+theme-switch {
+    display: inline-block;
+    min-height: 20px;
 }
 
 /* LOADER */
@@ -275,7 +282,7 @@ span.current_weather_icon img {
   transition: opacity .2s ease-in-out;
 }
 
-header + .loader:not(:last-child) {
+main:has(.current_weather) .loader {
     display: none;
 }
 

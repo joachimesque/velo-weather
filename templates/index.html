@@ -23,11 +23,45 @@
         <meta property="og:image:width" content="800"/>
         <meta property="og:image:height" content="600"/>
 
+
         {% assets "js_all" %}
             <script type="module" src="{{ ASSET_URL }}"></script>
         {% endassets %}
     </head>
     <body>
+        <script type="text/javascript">
+window.theme = "light";
+const darkModeMQ = window.matchMedia("(prefers-color-scheme: dark)");
+
+const setTheme = (newTheme) => {
+  window.theme = newTheme;
+  localStorage.setItem("theme", window.theme);
+
+  document.body.classList.remove("theme-dark", "theme-light");
+  document.body.classList.add(`theme-${window.theme}`);
+};
+
+const toggleTheme = () => {
+  setTheme(window.theme === "light" ? "dark" : "light");
+};
+
+// INIT
+const fromLocalStorage = localStorage.getItem("theme");
+if (!!fromLocalStorage && ["light", "dark"].includes(fromLocalStorage)) {
+  setTheme(fromLocalStorage);
+} else {
+  setTheme(darkModeMQ.matches ? "dark" : "light");
+}
+
+// Media Query Event
+darkModeMQ.onchange = (e) => {
+  setTheme(e.matches ? "dark" : "light");
+};
+
+window.setTheme = setTheme;
+window.toggleTheme = toggleTheme;
+
+        </script>
         <main class="container">
             <header>
                 <div class="row flex-align-items-center">
@@ -70,7 +104,7 @@
                         <span>{{ _('Now') }}</span>
 
                         <span class="current_weather_icon">
-                            <img src="{{ get_asset_url(data.current_weather.condition_icon) }}" alt="{{ data.current_weather.condition_text }}">
+                            <img src="{{ get_asset_url(data.current_weather.condition_icon) }}" alt="{{ data.current_weather.condition_text }}" width="48" height="48">
                             {{ data.current_weather.temperature_2m }}{{_('°C')}}
                         </span>
                     </h2>
@@ -179,7 +213,7 @@
                 {% for forecast in data.forecasts %}
                     <section>
                         <h2 class="forecast_day">
-                            <img src="{{ get_asset_url(forecast.condition_icon) }}" title="{{ forecast.condition_text }}" alt="{{ forecast.condition_text }}">
+                            <img src="{{ get_asset_url(forecast.condition_icon) }}" title="{{ forecast.condition_text }}" alt="{{ forecast.condition_text }}" width="48" height="48">
                             {{ forecast.date }}
                         </h2>
                         <div class="table-container">

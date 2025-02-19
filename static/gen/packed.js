@@ -89,45 +89,21 @@ class ThemeSwitcher extends HTMLElement {
         : "Switch to dark mode"
     };
 
-    let theme = "light";
-    const darkModeMQ = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const setTheme = (newTheme) => {
-      theme = newTheme;
-      localStorage.setItem("theme", theme);
-      inputEl.checked = theme === "dark";
-      textEl.textContent = choices[theme];
-
-      document.body.classList.remove("theme-dark", "theme-light");
-      document.body.classList.add(`theme-${theme}`);
-    };
-
-    const toggleTheme = () => {
-      setTheme(theme === "light" ? "dark" : "light");
-    };
-
-    // INIT
-    const fromLocalStorage = localStorage.getItem("theme");
-    if (!!fromLocalStorage && ["light", "dark"].includes(fromLocalStorage)) {
-      setTheme(fromLocalStorage);
-    } else {
-      setTheme(darkModeMQ.matches ? "dark" : "light");
-    }
-
-    inputEl.checked = theme === "dark";
-    textEl.textContent = choices[theme];
-
-    // Media Query Event
-    darkModeMQ.onchange = (e) => {
-      setTheme(e.matches ? "dark" : "light");
-    };
+    inputEl.checked = window.theme === "dark";
+    textEl.textContent = choices[window.theme];
 
     // Checkbox Change Event
-    inputEl.addEventListener("change", toggleTheme);
+    inputEl.addEventListener("change", () => {
+      toggleTheme();
+      inputEl.checked = window.theme === "dark";
+      textEl.textContent = choices[window.theme];
+    });
     controlEl.addEventListener("keydown", event => {
       if ([" ", "Enter"].includes(event.key)) {
         event.preventDefault();
         toggleTheme();
+        inputEl.checked = window.theme === "dark";
+        textEl.textContent = choices[window.theme];
       };
     })
 
