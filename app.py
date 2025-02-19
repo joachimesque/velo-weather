@@ -16,6 +16,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import session
+from flask import stream_template
 from flask import url_for
 from flask_assets import Bundle
 from flask_assets import Environment
@@ -160,34 +161,38 @@ def index():
         ("timezone", "auto"),
     )
 
-    weather_data = get_api_data("forecast", weather_params)
-    aqi_data = get_api_data("air-quality", air_quality_params)
+    def get_weather_data():
+        weather_data = get_api_data("forecast", weather_params)
+        aqi_data = get_api_data("air-quality", air_quality_params)
 
-    ideal_temps = (
-        get_relative_temps(weather_data) if use_relative_temps else IDEAL_TEMPS
-    )
-
-    if weather_data:
-        (serialized_weather, current_weather) = serialize_data(
-            weather_data, aqi_data, ideal_temps
+        ideal_temps = (
+            get_relative_temps(weather_data) if use_relative_temps else IDEAL_TEMPS
         )
-        timezone = weather_data["timezone"]
-    else:
-        (serialized_weather, current_weather, timezone) = ({}, {}, None)
 
-    return render_template(
+        if weather_data:
+            (forecasts, current_weather) = serialize_data(
+                weather_data, aqi_data, ideal_temps
+            )
+            timezone = weather_data["timezone"]
+        else:
+            (forecasts, current_weather, timezone) = ({}, {}, None)
+
+        yield {
+            "forecasts": forecasts,
+            "current_weather": current_weather,
+            "ideal_temps": ideal_temps,
+        }
+
+    return stream_template(
         "index.html",
-        data=serialized_weather,
-        timezone=timezone,
         location=location,
-        current_weather=current_weather,
         max_rain=MAX_RAIN_ACCEPTABLE,
         max_wind=MAX_WIND_ACCEPTABLE,
         languages=app.config["LANGUAGES"],
-        ideal_temps=ideal_temps,
         default_ideal_temps=IDEAL_TEMPS,
         extreme_temps=(MIN_TEMP_ACCEPTABLE, MAX_TEMP_ACCEPTABLE),
         use_relative_temps=use_relative_temps,
+        computed_data=get_weather_data(),
     )
 
 

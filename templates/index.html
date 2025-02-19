@@ -11,12 +11,8 @@
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{ get_asset_url('apple-touch-icon.png') }}">
         <link rel="manifest" href="{{ get_asset_url('site.webmanifest') }}">
-        {% if data %}
-            <link rel="icon" type="image/png" href="{{ get_asset_url(current_weather.condition_icon) }}">
-        {% else %}
-            <link rel="icon" type="image/png" sizes="32x32" href="{{ get_asset_url('favicon-32x32.png') }}">
-            <link rel="icon" type="image/png" sizes="16x16" href="{{ get_asset_url('favicon-16x16.png') }}">
-        {% endif %}
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ get_asset_url('favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ get_asset_url('favicon-16x16.png') }}">
         <title>🚴💨 Velo Weather</title>
 
         <meta name="twitter:card" content="summary"/>
@@ -60,6 +56,8 @@
                 <theme-switch dark="Mode sombre" light="Mode clair" style=""></theme-switch>
             </header>
 
+            {% for data in computed_data %}
+
             {% if not data %}
                 <section>🤕 {{ _('No data found. Wrong location?') }}</section>
             {% else %}
@@ -68,56 +66,56 @@
                         <span>{{ _('Now') }}</span>
 
                         <span class="current_weather_icon">
-                            <img src="{{ get_asset_url(current_weather.condition_icon) }}" alt="{{ current_weather.condition_text }}">
-                            {{ current_weather.temperature_2m }}{{_('°C')}}
+                            <img src="{{ get_asset_url(data.current_weather.condition_icon) }}" alt="{{ data.current_weather.condition_text }}">
+                            {{ data.current_weather.temperature_2m }}{{_('°C')}}
                         </span>
                     </h2>
 
                     <dl class="current_weather_summary">
-{#                        <div>
+                        {# <div>
                             <dt>{{ _('Updated') }}</dt>
-                            <dd>{{ current_weather.time }}</dd>
+                            <dd>{{ data.current_weather.time }}</dd>
                         </div>#}
 
                         <div>
                             <dt>{{ _('Air quality') }}</dt>
                             <dd>
-                                <span aria-hidden="" style="color: {{ current_weather.air_quality_gradient }}">●</span>
-                                {{ current_weather.air_quality_translation }}
+                                <span aria-hidden="" style="color: {{ data.current_weather.air_quality_gradient }}">●</span>
+                                {{ data.current_weather.air_quality_translation }}
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Wind speed') }}</dt>
                             <dd>
-                                {{ current_weather.windspeed_notice }}
-                                {{ current_weather.windspeed_10m }}{{ _('kph') }}
+                                {{ data.current_weather.windspeed_notice }}
+                                {{ data.current_weather.windspeed_10m }}{{ _('kph') }}
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Wind gust') }}</dt>
                             <dd>
-                                {{ current_weather.windgusts_notice }}
-                                {{ current_weather.windgusts_10m }}{{ _('kph') }}
+                                {{ data.current_weather.windgusts_notice }}
+                                {{ data.current_weather.windgusts_10m }}{{ _('kph') }}
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Wind direction') }}</dt>
                             <dd>
-                                <span aria-hidden class="is-inline-block" style="transform: rotate({{ current_weather.winddirection_10m }}deg);">↓</span>
+                                <span aria-hidden class="is-inline-block" style="transform: rotate({{ data.current_weather.winddirection_10m }}deg);">↓</span>
                                 <small>
-                                    <abbr title="{{ current_weather.wind_azimuth_full }}">
-                                        {{ current_weather.wind_azimuth_abbr }}
+                                    <abbr title="{{ data.current_weather.wind_azimuth_full }}">
+                                        {{ data.current_weather.wind_azimuth_abbr }}
                                     </abbr>
                                 </small>
                             </dd>
                         </div>
                         <div>
                             <dt>{{ _('Precipitation') }}</dt>
-                            <dd>{{ current_weather.precipitation }}{{ _('mm') }}</dd>
+                            <dd>{{ data.current_weather.precipitation }}{{ _('mm') }}</dd>
                         </div>
                         <div>
                             <dt>{{ _('Feels like') }}</dt>
-                            <dd>{{ current_weather.apparent_temperature }}{{_('°C')}}</dd>
+                            <dd>{{ data.current_weather.apparent_temperature }}{{_('°C')}}</dd>
                         </div>
                     </dl>
                 </section>
@@ -135,7 +133,7 @@
                         <li>
                             ☔️ {{ _('Precipitation in millimeters per hour.') }}
                             {{ _('Vertical scale from 0 to %(max_rain)s<abbr title=\'millimeters\'>mm</abbr>.', max_rain=max_rain) }}</li>
-                        <li>🌡 {{ _('Temperature in degree Celcius. Scale from %(extreme_min)s<abbr title=\'degrees Celcius\'>°C</abbr> (blue) to %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> (white) and from %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(extreme_max)s<abbr title=\'degrees Celcius\'>°C</abbr> (orange).', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1], extreme_min=extreme_temps[0], extreme_max=extreme_temps[1]) }}</li>
+                        <li>🌡 {{ _('Temperature in degree Celcius. Scale from %(extreme_min)s<abbr title=\'degrees Celcius\'>°C</abbr> (blue) to %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> (white) and from %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(extreme_max)s<abbr title=\'degrees Celcius\'>°C</abbr> (orange).', ideal_min=data.ideal_temps[0], ideal_max=data.ideal_temps[1], extreme_min=extreme_temps[0], extreme_max=extreme_temps[1]) }}</li>
                         <li>🥶/😨/🙂/😊/🥵 {{ _('Apparent temperature, in degree Celcius. Same scale as temperature.') }}</li>
                     </ul>
                 </details>
@@ -154,7 +152,7 @@
                             <ul>
                                 <li>
                                 {% if use_relative_temps %}
-                                    {{ _('The ideal temperature range is based on last weeks weather, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=ideal_temps[0], ideal_max=ideal_temps[1]) }}
+                                    {{ _('The ideal temperature range is based on last weeks weather, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=data.ideal_temps[0], ideal_max=data.ideal_temps[1]) }}
                                 {% else %}
                                     {{ _('The ideal temperature range is the default setting, from %(ideal_min)s<abbr title=\'degrees Celcius\'>°C</abbr> to %(ideal_max)s<abbr title=\'degrees Celcius\'>°C</abbr>', ideal_min=default_ideal_temps[0], ideal_max=default_ideal_temps[1]) }}
                                 {% endif %}
@@ -174,8 +172,7 @@
                     </details>
                 {% endwith %}
 
-                {% set forecasts = data %}
-                {% for forecast in forecasts %}
+                {% for forecast in data.forecasts %}
                     <section>
                         <h2 class="forecast_day">
                             <img src="{{ get_asset_url(forecast.condition_icon) }}" title="{{ forecast.condition_text }}" alt="{{ forecast.condition_text }}">
@@ -276,6 +273,7 @@
                 {% endfor %}
 
             {% endif %}
+            {% endfor %}
 
             <footer class="row flex-align-items-center">
                 <div class="col-9-lg">
