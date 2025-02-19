@@ -117,7 +117,7 @@ window.toggleTheme = toggleTheme;
             {% else %}
                 <section class="card current_weather">
                     <h2 class="current_weather_title">
-                        <span>{{ _('Now') }}</span>
+                        <small>{{ _('Right now') }}</small>
 
                         <span class="current_weather_icon">
                             <img src="{{ get_asset_url(data.current_weather.condition_icon) }}" alt="{{ data.current_weather.condition_text }}" width="48" height="48">
