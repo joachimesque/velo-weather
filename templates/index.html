@@ -20,7 +20,9 @@
         <meta property="og:image" content="{{ get_asset_url('images/og_image.png') }}"/>
         <meta property="og:image:width" content="800"/>
         <meta property="og:image:height" content="600"/>
-
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="theme-color" content="#fff">
 
         {% assets "js_all" %}
             <script type="module" src="{{ ASSET_URL }}"></script>
@@ -34,6 +36,22 @@ const darkModeMQ = window.matchMedia("(prefers-color-scheme: dark)");
 const setTheme = (newTheme) => {
   window.theme = newTheme;
   localStorage.setItem("theme", window.theme);
+
+  if (window.theme == "dark") {
+    document
+        .querySelector("meta[name='apple-mobile-web-app-status-bar-style']")
+        .setAttribute("content", "black-translucent");
+    document
+        .querySelector("meta[name='theme-color']")
+        .setAttribute("content", "#0d0712");
+  } else {
+    document
+        .querySelector("meta[name='apple-mobile-web-app-status-bar-style']")
+        .setAttribute("content", "default");
+    document
+        .querySelector("meta[name='theme-color']")
+        .setAttribute("content", "#fff");
+  }
 
   document.body.classList.remove("theme-dark", "theme-light");
   document.body.classList.add(`theme-${window.theme}`);

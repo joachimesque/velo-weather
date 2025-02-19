@@ -74,7 +74,7 @@ body.theme-dark td.cell_custom_height::after {
     background-image: linear-gradient(0deg, hsla(210, 80%, 30%, 1) 0%, hsla(210, 80%, 30%, 1) var(--bg-limit), hsla(210, 80%, 30%, 0) var(--bg-limit), hsla(210, 80%, 30%, 0) 100%);
 }
 
-body {
+html, body {
   color: var(--color-text);
   background-color: var(--bg-color);
 }
