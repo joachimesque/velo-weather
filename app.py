@@ -200,16 +200,17 @@ def location():
 
     location_data = get_api_data("location", location_params)
 
-    if not "results" in location_data:
-        return {}
-
-    return {
-        "results": sorted(
+    results = (
+        sorted(
             location_data["results"],
             key=lambda d: d["population"] if "population" in d else 0,
             reverse=True,
         )
-    }
+        if "results" in location_data
+        else []
+    )
+
+    return render_template("location_results.html", results=results)
 
 
 # ----------------

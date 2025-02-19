@@ -1,0 +1,3 @@
+{% for result in results %}
+<option data-latitude="{{ result.latitude }}" data-longitude="{{ result.longitude }}" value="{{result.name}}, {{ result.admin1 or result.admin2 }}  ({{result.country}})"></option>
+{% endfor %}
