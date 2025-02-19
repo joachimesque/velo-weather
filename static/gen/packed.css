@@ -264,29 +264,19 @@ span.current_weather_icon img {
 }
 
 /* LOADER */
-main {
-  transform: translateY(-100px);
-  transition: 0.3s 0.1s ease-in-out;
-}
-
-main.is-loading {
-    transform: translateY(0px);
-}
-
 .loader {
   min-height: 100px;
-  padding: 10px 0;
+  padding-block: min(100px, 20vh);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap:  10px;
-  opacity: 0;
   transition: opacity .2s ease-in-out;
 }
 
-main.is-loading .loader {
-    opacity: 1;
+header + .loader:not(:last-child) {
+    display: none;
 }
 
 @media(min-width: 768px) {
