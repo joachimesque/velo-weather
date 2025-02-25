@@ -667,7 +667,7 @@ def get_precipitation_properties(precipitation):
     precip_alert = (PRECIP_ALERT / MAX_RAIN_ACCEPTABLE) * 100
 
     return {
-        "precip_percent": percentage,
+        "precip_percent": round(percentage),
         "precip_alert": precip_alert,
     }
 

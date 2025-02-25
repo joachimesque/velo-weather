@@ -231,6 +231,7 @@ td.cell_custom_temperature {
 
 td.cell_custom_height {
     position: relative;
+    z-index: 1;
 }
 
 td.cell_custom_height::after {
