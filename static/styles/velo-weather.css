@@ -158,7 +158,7 @@ th.cell_night, td.cell_night {
 }
 
 tr > :first-child {
-    background-color: var(--bg-color);
+    background: linear-gradient(to right, var(--bg-color) 50%, transparent);
     position: sticky;
     left: 0;
     box-sizing: border-box;
