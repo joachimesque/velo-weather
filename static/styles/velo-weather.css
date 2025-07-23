@@ -97,6 +97,30 @@ a.header_logo {
     max-width: 48px;
     vertical-align: middle;
 }
+
+.forecast_day dl {
+  display: inline-flex;
+  font-size: 0.6em;
+  vertical-align: middle;
+  line-height: 0.8;
+  margin: 0;
+  margin-inline-start: 1rem;
+  padding: 0;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.forecast_day dt, .forecast_day dd {
+  padding: 0; margin: 0;
+}
+.forecast_day dt {
+  font-weight: 400;
+}
+
+.forecast_day div {
+  display: flex;
+  gap: 1rem;
+}
 td, th {
     vertical-align: middle;
     text-align: center;
