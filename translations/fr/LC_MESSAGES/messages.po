@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-19 20:11+0100\n"
+"POT-Creation-Date: 2025-07-24 09:02+0200\n"
 "PO-Revision-Date: 2021-09-20 21:34+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -47,8 +47,8 @@ msgid "Very bad"
 msgstr "Très mauvaise"
 
 #: app.py:522
-msgid "EEEE, MMMM d"
-msgstr "EEEE d MMMM"
+msgid "EEE, MMM d"
+msgstr "EEE d MMM"
 
 #: templates/index.html:19
 msgid "A basic weather forecast tool to help you plan your bike rides."
@@ -62,7 +62,7 @@ msgstr "Localisation"
 msgid "Reset input"
 msgstr ""
 
-#: templates/index.html:99 templates/index.html:355
+#: templates/index.html:99 templates/index.html:359
 msgid "Go!"
 msgstr "Aller&nbsp;!"
 
@@ -78,12 +78,12 @@ msgstr "Aucune donnée trouvée. Mauvaise localisation&nbsp;?"
 msgid "Right now"
 msgstr "En ce moment"
 
-#: templates/index.html:124 templates/index.html:172 templates/index.html:309
-#: templates/index.html:319
+#: templates/index.html:124 templates/index.html:172 templates/index.html:235
+#: templates/index.html:236 templates/index.html:313 templates/index.html:323
 msgid "°C"
 msgstr "&nbsp;°C"
 
-#: templates/index.html:135 templates/index.html:254
+#: templates/index.html:135 templates/index.html:258
 msgid "Air quality"
 msgstr "Qualité de l’air"
 
@@ -91,7 +91,7 @@ msgstr "Qualité de l’air"
 msgid "Wind speed"
 msgstr "Vitesse du vent"
 
-#: templates/index.html:145 templates/index.html:152 templates/index.html:277
+#: templates/index.html:145 templates/index.html:152 templates/index.html:281
 msgid "kph"
 msgstr "&nbsp;km/h"
 
@@ -99,7 +99,7 @@ msgstr "&nbsp;km/h"
 msgid "Wind gust"
 msgstr "Rafales"
 
-#: templates/index.html:156 templates/index.html:283
+#: templates/index.html:156 templates/index.html:287
 msgid "Wind direction"
 msgstr "Direction du vent"
 
@@ -107,11 +107,11 @@ msgstr "Direction du vent"
 msgid "Precipitation"
 msgstr "Précipitation"
 
-#: templates/index.html:168 templates/index.html:301
+#: templates/index.html:168 templates/index.html:305
 msgid "mm"
 msgstr "&nbsp;mm"
 
-#: templates/index.html:171 templates/index.html:314
+#: templates/index.html:171 templates/index.html:318
 msgid "Feels like"
 msgstr "Température ressentie"
 
@@ -233,19 +233,35 @@ msgstr ""
 msgid "Base the ideal temperature range on last week’s weather"
 msgstr "Baser la plage de températures idéales sur la météo de la semaine dernière"
 
-#: templates/index.html:260
+#: templates/index.html:235
+msgid "Minimum temps"
+msgstr "Température minimum"
+
+#: templates/index.html:235
+msgid "min"
+msgstr "min."
+
+#: templates/index.html:236
+msgid "Maxiumum temps"
+msgstr "Température maximum"
+
+#: templates/index.html:236
+msgid "max"
+msgstr "max."
+
+#: templates/index.html:264
 msgid "Very complicated opportunity indicator"
 msgstr "Indicateur d’opportunité super compliqué"
 
-#: templates/index.html:270
+#: templates/index.html:274
 msgid "Wind speed (kph)"
 msgstr "Vitesse du vent (km/h)"
 
-#: templates/index.html:298
+#: templates/index.html:302
 msgid "Precipitation (mm)"
 msgstr "Précipitation (mm)"
 
-#: templates/index.html:300
+#: templates/index.html:304
 #, fuzzy, python-format
 msgid ""
 "Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is "
@@ -254,39 +270,39 @@ msgstr ""
 "Le risque de pluie est %(chance_of_rain)s%(percent)s, et la précipitation"
 " est estimée à %(precipitation)s millimètres."
 
-#: templates/index.html:300
+#: templates/index.html:304
 msgid "&percnt;"
 msgstr "&nbsp;&percnt;"
 
-#: templates/index.html:306
+#: templates/index.html:310
 msgid "Temperature"
 msgstr "Température"
 
-#: templates/index.html:334
+#: templates/index.html:338
 msgid "Based on an idea and code by abulte:"
 msgstr "Basé sur une idée et du code par abulte&nbsp;:"
 
-#: templates/index.html:335
+#: templates/index.html:339
 msgid "Support them with a pizza"
 msgstr "Offrez-lui une pizza"
 
-#: templates/index.html:337
+#: templates/index.html:341
 msgid "Fork by joachimesque:"
 msgstr "Fork par joachimesque&nbsp;:"
 
-#: templates/index.html:338
+#: templates/index.html:342
 msgid "made in Montreuil 🍑 with pride"
 msgstr "fait à Montreuil 🍑 avec fierté"
 
-#: templates/index.html:340
+#: templates/index.html:344
 msgid "Logo made from Noto Emoji font:"
 msgstr "Logo fait à partir de la police Noto Emoji&nbsp;:"
 
-#: templates/index.html:347
+#: templates/index.html:351
 msgid "Language"
 msgstr "Langue"
 
-#: templates/index.html:359
+#: templates/index.html:363
 msgid "Weather data:"
 msgstr "Données météorologiques&nbsp;:"
 

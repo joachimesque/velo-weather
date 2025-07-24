@@ -519,7 +519,7 @@ def get_relative_temps(data):
 
 def get_day(d, format="%A %d %b"):
     """Use Babel to localize a date from date object with language-specific format"""
-    localized_format = _("EEEE, MMMM d")
+    localized_format = _("EEE, MMM d")
 
     return format_date(date=d, format=localized_format)
 

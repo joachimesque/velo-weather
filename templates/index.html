@@ -232,8 +232,8 @@ window.toggleTheme = toggleTheme;
                             <img src="{{ get_asset_url(forecast.condition_icon) }}" title="{{ forecast.condition_text }}" alt="{{ forecast.condition_text }}" width="48" height="48">
                             {{ forecast.date }}
                             <dl>
-                                <div><dt><small aria-label="Température minimum">min.</small></dt><dd>{{ forecast.apparent_temperature_min }}{{_('°C')}}</dd></div>
-                                <div><dt><small aria-label="Température maximum">max.</small></dt><dd>{{ forecast.apparent_temperature_max }}{{_('°C')}}</dd></div>
+                                <div><dt><small aria-label="{{ _('Minimum temps') }}">{{ _('min') }}</small></dt><dd>{{ forecast.apparent_temperature_min }}{{_('°C')}}</dd></div>
+                                <div><dt><small aria-label="{{ _('Maxiumum temps') }}">{{ _('max') }}</small></dt><dd>{{ forecast.apparent_temperature_max }}{{_('°C')}}</dd></div>
                             </dl>
                         </h2>
                         <div class="table-container">

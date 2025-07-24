@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-19 20:11+0100\n"
+"POT-Creation-Date: 2025-07-24 09:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgid "Very bad"
 msgstr ""
 
 #: app.py:522
-msgid "EEEE, MMMM d"
+msgid "EEE, MMM d"
 msgstr ""
 
 #: templates/index.html:19
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Reset input"
 msgstr ""
 
-#: templates/index.html:99 templates/index.html:355
+#: templates/index.html:99 templates/index.html:359
 msgid "Go!"
 msgstr ""
 
@@ -77,12 +77,12 @@ msgstr ""
 msgid "Right now"
 msgstr ""
 
-#: templates/index.html:124 templates/index.html:172 templates/index.html:309
-#: templates/index.html:319
+#: templates/index.html:124 templates/index.html:172 templates/index.html:235
+#: templates/index.html:236 templates/index.html:313 templates/index.html:323
 msgid "°C"
 msgstr ""
 
-#: templates/index.html:135 templates/index.html:254
+#: templates/index.html:135 templates/index.html:258
 msgid "Air quality"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Wind speed"
 msgstr ""
 
-#: templates/index.html:145 templates/index.html:152 templates/index.html:277
+#: templates/index.html:145 templates/index.html:152 templates/index.html:281
 msgid "kph"
 msgstr ""
 
@@ -98,7 +98,7 @@ msgstr ""
 msgid "Wind gust"
 msgstr ""
 
-#: templates/index.html:156 templates/index.html:283
+#: templates/index.html:156 templates/index.html:287
 msgid "Wind direction"
 msgstr ""
 
@@ -106,11 +106,11 @@ msgstr ""
 msgid "Precipitation"
 msgstr ""
 
-#: templates/index.html:168 templates/index.html:301
+#: templates/index.html:168 templates/index.html:305
 msgid "mm"
 msgstr ""
 
-#: templates/index.html:171 templates/index.html:314
+#: templates/index.html:171 templates/index.html:318
 msgid "Feels like"
 msgstr ""
 
@@ -205,57 +205,73 @@ msgstr ""
 msgid "Base the ideal temperature range on last week’s weather"
 msgstr ""
 
-#: templates/index.html:260
+#: templates/index.html:235
+msgid "Minimum temps"
+msgstr ""
+
+#: templates/index.html:235
+msgid "min"
+msgstr ""
+
+#: templates/index.html:236
+msgid "Maxiumum temps"
+msgstr ""
+
+#: templates/index.html:236
+msgid "max"
+msgstr ""
+
+#: templates/index.html:264
 msgid "Very complicated opportunity indicator"
 msgstr ""
 
-#: templates/index.html:270
+#: templates/index.html:274
 msgid "Wind speed (kph)"
 msgstr ""
 
-#: templates/index.html:298
+#: templates/index.html:302
 msgid "Precipitation (mm)"
 msgstr ""
 
-#: templates/index.html:300
+#: templates/index.html:304
 #, python-format
 msgid ""
 "Chance of rain is %(chance_of_rain)s%(percent)s, and precipitation is "
 "%(precipitation)s millimeters."
 msgstr ""
 
-#: templates/index.html:300
+#: templates/index.html:304
 msgid "&percnt;"
 msgstr ""
 
-#: templates/index.html:306
+#: templates/index.html:310
 msgid "Temperature"
 msgstr ""
 
-#: templates/index.html:334
+#: templates/index.html:338
 msgid "Based on an idea and code by abulte:"
 msgstr ""
 
-#: templates/index.html:335
+#: templates/index.html:339
 msgid "Support them with a pizza"
 msgstr ""
 
-#: templates/index.html:337
+#: templates/index.html:341
 msgid "Fork by joachimesque:"
 msgstr ""
 
-#: templates/index.html:338
+#: templates/index.html:342
 msgid "made in Montreuil 🍑 with pride"
 msgstr ""
 
-#: templates/index.html:340
+#: templates/index.html:344
 msgid "Logo made from Noto Emoji font:"
 msgstr ""
 
-#: templates/index.html:347
+#: templates/index.html:351
 msgid "Language"
 msgstr ""
 
-#: templates/index.html:359
+#: templates/index.html:363
 msgid "Weather data:"
 msgstr ""
